@@ -1,4 +1,7 @@
 package models
 
-class Ingredients {
-}
+data class Ingredients (
+    var name: String,
+    var quantity: Int,
+    var unit: Int  //grams
+)
