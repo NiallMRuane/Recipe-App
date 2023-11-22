@@ -1,11 +1,13 @@
 import controllers.RecipeAPI
 import models.Ingredients
 import models.Recipe
+import mu.KotlinLogging
 import utils.ScannerInput
 import utils.ScannerInput.readNextBoolean
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
 
+private val logger = KotlinLogging.logger {}
 private val recipeAPI = RecipeAPI()
 fun main() = runMenu()
 
@@ -14,6 +16,7 @@ fun runMenu() {
     do {
         when (val option = mainMenu()) {
             1 -> addRecipe()
+            0 -> exitApp()
             else -> println("Invalid menu choice: $option")
         }
     } while (true)
@@ -50,5 +53,10 @@ fun addRecipe() {
     } else {
         println("Add Failed")
     }
-    }
+}
+
+fun exitApp(){
+    logger.info("Exiting...")
+    System.exit(0)
+}
 
