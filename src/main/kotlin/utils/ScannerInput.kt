@@ -40,4 +40,10 @@ object ScannerInput {
         print(prompt)
         return Scanner(System.`in`).next()[0]
     }
+
+    @JvmStatic
+    fun readNextBoolean(prompt: String?): Boolean {
+        print(prompt)
+        return Scanner(System.`in`).nextBoolean()
+    }
 }
