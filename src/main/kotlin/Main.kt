@@ -16,6 +16,7 @@ fun runMenu() {
     do {
         when (val option = mainMenu()) {
             1 -> addRecipe()
+            2 -> listRecipe()
             0 -> exitApp()
             else -> println("Invalid menu choice: $option")
         }
@@ -28,8 +29,8 @@ fun mainMenu() = readNextInt(
          > |                  RECIPE APP                  |
          > -----------------------------------------------------  
          > | RECIPE MENU                                       |
-         > |   1) Add a note                                   |
-
+         > |   1) Add a recipe                                 |
+         > |   2) List recipes                                 |
          > -----------------------------------------------------  
          > | ITEM MENU                                         | 
          > -----------------------------------------------------  
@@ -55,6 +56,13 @@ fun addRecipe() {
     }
 }
 
+fun listRecipe() {
+    if (recipeAPI.numberOfRecipes() > 0) {
+        println(recipeAPI.listRecipes())
+    } else {
+        println("No recipes stored")
+    }
+}
 fun exitApp(){
     logger.info("Exiting...")
     System.exit(0)
