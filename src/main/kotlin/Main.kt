@@ -1,12 +1,9 @@
 import controllers.RecipeAPI
-import models.Ingredients
 import models.Recipe
 import mu.KotlinLogging
-import utils.ScannerInput
 import utils.ScannerInput.readNextBoolean
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
-import utils.Utilities.formatListString
 import kotlin.system.exitProcess
 
 private val logger = KotlinLogging.logger {}
@@ -21,6 +18,7 @@ fun runMenu() {
             2 -> listRecipe()
             3 -> searchByTitle()
             4 -> searchByCookingTime()
+            5 -> searchByDifficultyLevel()
             0 -> exitApp()
             else -> println("Invalid menu choice: $option")
         }
@@ -37,6 +35,7 @@ fun mainMenu() = readNextInt(
          > |   2) List recipes                                 |
          > |   3) Search recipes by title                      |
          > |   4) Search recipes by cooking time               |
+         > |   5) Search recipes by difficulty level           |
          > -----------------------------------------------------  
          > | ITEM MENU                                         | 
          > -----------------------------------------------------  
@@ -53,7 +52,9 @@ fun addRecipe() {
     var difficultyLevel = readNextLine("Enter the difficulty level:")
     var isRecipeVegan = readNextBoolean("Is the recipe vegan? (true/false) ")
     var recipeCreator = readNextLine("Enter the creator name:")
-    val isAdded = recipeAPI.add(Recipe(recipeTitle = recipeTitle, cookingTime = cookingTime,difficultyLevel = difficultyLevel, isRecipeVegan = isRecipeVegan, recipeCreator = recipeCreator))
+    val isAdded = recipeAPI.add(Recipe(
+        recipeTitle = recipeTitle, cookingTime = cookingTime,
+        difficultyLevel = difficultyLevel, isRecipeVegan = isRecipeVegan, recipeCreator = recipeCreator))
 
     if (isAdded) println("Added Successfully")
     else logger.info("Add Failed")
@@ -75,6 +76,14 @@ fun searchByTitle (){
 fun searchByCookingTime (){
     val searchCookingTime = readNextInt("Enter the cooking time to search by: ")
     val searchResults = recipeAPI.searchByCookingTime(searchCookingTime)
+    if (searchResults.isEmpty()) logger.info("No notes found")
+    else
+        println(searchResults)
+}
+
+fun searchByDifficultyLevel (){
+    val searchDifficulty = readNextLine("Enter the difficulty level to search by: ")
+    val searchResults = recipeAPI.searchByDifficultyLevel(searchDifficulty)
     if (searchResults.isEmpty()) logger.info("No notes found")
     else
         println(searchResults)
