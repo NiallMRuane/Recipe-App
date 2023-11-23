@@ -17,6 +17,9 @@ class RecipeAPI {
 
     fun searchByTitle(searchString : String) =
         formatListString(recipes.filter { recipe -> recipe.recipeTitle.contains(searchString, ignoreCase = true)})
+
+    fun searchByCookingTime(cookingTime : Int) =
+        formatListString(recipes.filter { recipe -> recipe.cookingTime == cookingTime})
     fun numberOfRecipes() = recipes.size
 
 

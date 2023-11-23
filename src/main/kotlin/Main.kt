@@ -20,6 +20,7 @@ fun runMenu() {
             1 -> addRecipe()
             2 -> listRecipe()
             3 -> searchByTitle()
+            4 -> searchByCookingTime()
             0 -> exitApp()
             else -> println("Invalid menu choice: $option")
         }
@@ -35,6 +36,7 @@ fun mainMenu() = readNextInt(
          > |   1) Add a recipe                                 |
          > |   2) List recipes                                 |
          > |   3) Search recipes by title                      |
+         > |   4) Search recipes by cooking time               |
          > -----------------------------------------------------  
          > | ITEM MENU                                         | 
          > -----------------------------------------------------  
@@ -69,6 +71,15 @@ fun searchByTitle (){
     else
         println(searchResults)
 }
+
+fun searchByCookingTime (){
+    val searchCookingTime = readNextInt("Enter the cooking time to search by: ")
+    val searchResults = recipeAPI.searchByCookingTime(searchCookingTime)
+    if (searchResults.isEmpty()) logger.info("No notes found")
+    else
+        println(searchResults)
+}
+
 fun exitApp(){
     logger.info("Exiting...")
     exitProcess(0)
