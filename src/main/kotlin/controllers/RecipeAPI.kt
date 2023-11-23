@@ -15,6 +15,8 @@ class RecipeAPI {
         if (recipes.isEmpty()) "No recipes stored"
         else formatListString(recipes)
 
+    fun searchByTitle(searchString : String) =
+        formatListString(recipes.filter { recipe -> recipe.recipeTitle.contains(searchString, ignoreCase = true)})
     fun numberOfRecipes() = recipes.size
 
 

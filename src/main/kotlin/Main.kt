@@ -6,6 +6,8 @@ import utils.ScannerInput
 import utils.ScannerInput.readNextBoolean
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
+import utils.Utilities.formatListString
+import kotlin.system.exitProcess
 
 private val logger = KotlinLogging.logger {}
 private val recipeAPI = RecipeAPI()
@@ -17,6 +19,7 @@ fun runMenu() {
         when (val option = mainMenu()) {
             1 -> addRecipe()
             2 -> listRecipe()
+            3 -> searchByTitle()
             0 -> exitApp()
             else -> println("Invalid menu choice: $option")
         }
@@ -31,6 +34,7 @@ fun mainMenu() = readNextInt(
          > | RECIPE MENU                                       |
          > |   1) Add a recipe                                 |
          > |   2) List recipes                                 |
+         > |   3) Search recipes by title                      |
          > -----------------------------------------------------  
          > | ITEM MENU                                         | 
          > -----------------------------------------------------  
@@ -49,22 +53,24 @@ fun addRecipe() {
     var recipeCreator = readNextLine("Enter the creator name:")
     val isAdded = recipeAPI.add(Recipe(recipeTitle = recipeTitle, cookingTime = cookingTime,difficultyLevel = difficultyLevel, isRecipeVegan = isRecipeVegan, recipeCreator = recipeCreator))
 
-    if (isAdded) {
-        println("Added Successfully")
-    } else {
-        println("Add Failed")
-    }
+    if (isAdded) println("Added Successfully")
+    else logger.info("Add Failed")
 }
 
-fun listRecipe() {
-    if (recipeAPI.numberOfRecipes() > 0) {
-        println(recipeAPI.listRecipes())
-    } else {
-        println("No recipes stored")
-    }
+fun listRecipe() = if (recipeAPI.numberOfRecipes() > 0)
+    println(recipeAPI.listRecipes())
+else
+    logger.info("No recipes stored")
+
+fun searchByTitle (){
+    val searchTitle = readNextLine("Enter the title to search by: ")
+    val searchResults = recipeAPI.searchByTitle(searchTitle)
+    if (searchResults.isEmpty()) logger.info("No notes found")
+    else
+        println(searchResults)
 }
 fun exitApp(){
     logger.info("Exiting...")
-    System.exit(0)
+    exitProcess(0)
 }
 
