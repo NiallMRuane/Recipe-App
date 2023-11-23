@@ -46,4 +46,5 @@ object ScannerInput {
         print(prompt)
         return Scanner(System.`in`).nextBoolean()
     }
-}
+
+    }

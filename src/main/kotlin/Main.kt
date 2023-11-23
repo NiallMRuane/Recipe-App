@@ -1,11 +1,10 @@
 import controllers.RecipeAPI
-import models.Ingredients
 import models.Recipe
 import mu.KotlinLogging
-import utils.ScannerInput
 import utils.ScannerInput.readNextBoolean
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
+import kotlin.system.exitProcess
 
 private val logger = KotlinLogging.logger {}
 private val recipeAPI = RecipeAPI()
@@ -16,6 +15,8 @@ fun runMenu() {
     do {
         when (val option = mainMenu()) {
             1 -> addRecipe()
+            2 -> listRecipe()
+            3 -> searchRecipes()
             0 -> exitApp()
             else -> println("Invalid menu choice: $option")
         }
@@ -28,8 +29,9 @@ fun mainMenu() = readNextInt(
          > |                  RECIPE APP                  |
          > -----------------------------------------------------  
          > | RECIPE MENU                                       |
-         > |   1) Add a note                                   |
-
+         > |   1) Add a recipe                                 |
+         > |   2) List recipes                                 |
+         > |   3) Search recipes                               |
          > -----------------------------------------------------  
          > | ITEM MENU                                         | 
          > -----------------------------------------------------  
@@ -46,17 +48,70 @@ fun addRecipe() {
     var difficultyLevel = readNextLine("Enter the difficulty level:")
     var isRecipeVegan = readNextBoolean("Is the recipe vegan? (true/false) ")
     var recipeCreator = readNextLine("Enter the creator name:")
-    val isAdded = recipeAPI.add(Recipe(recipeTitle = recipeTitle, cookingTime = cookingTime,difficultyLevel = difficultyLevel, isRecipeVegan = isRecipeVegan, recipeCreator = recipeCreator))
+    val isAdded = recipeAPI.add(Recipe(
+        recipeTitle = recipeTitle, cookingTime = cookingTime,
+        difficultyLevel = difficultyLevel, isRecipeVegan = isRecipeVegan, recipeCreator = recipeCreator))
 
-    if (isAdded) {
-        println("Added Successfully")
+    if (isAdded) println("Added Successfully")
+    else logger.info("Add Failed")
+}
+
+fun listRecipe() = if (recipeAPI.numberOfRecipes() > 0)
+    println(recipeAPI.listRecipes())
+else
+    logger.info("No recipes stored")
+
+//--------------------
+//  SEARCH FOR RECIPES
+//--------------------
+
+fun searchRecipes(){
+    if (recipeAPI.numberOfRecipes() > 0) {
+        val option = readNextInt(
+            """
+                  > -------------------------------------
+                  > |   1) Search by title               |
+                  > |   2) Search by cooking time        |
+                  > |   3) Search by difficulty level    |
+                  > -------------------------------------
+         > ==>> """.trimMargin(">"))
+
+        when (option) {
+            1 -> searchByTitle();
+            2 -> searchByCookingTime();
+            3 -> searchByDifficultyLevel();
+            else -> logger.info("Invalid option entered: $option");
+        }
     } else {
-        println("Add Failed")
+        logger.info("Option Invalid - No recipes stored");
     }
+}
+fun searchByTitle (){
+    val searchTitle = readNextLine("Enter the title to search by: ")
+    val searchResults = recipeAPI.searchByTitle(searchTitle)
+    if (searchResults.isEmpty()) logger.info("No recipes found")
+    else
+        println(searchResults)
+}
+
+fun searchByCookingTime (){
+    val searchCookingTime = readNextInt("Enter the cooking time to search by: ")
+    val searchResults = recipeAPI.searchByCookingTime(searchCookingTime)
+    if (searchResults.isEmpty()) logger.info("No recipes found")
+    else
+        println(searchResults)
+}
+
+fun searchByDifficultyLevel (){
+    val searchDifficulty = readNextLine("Enter the difficulty level to search by: ")
+    val searchResults = recipeAPI.searchByDifficultyLevel(searchDifficulty)
+    if (searchResults.isEmpty()) logger.info("No recipes found")
+    else
+        println(searchResults)
 }
 
 fun exitApp(){
     logger.info("Exiting...")
-    System.exit(0)
+    exitProcess(0)
 }
 
