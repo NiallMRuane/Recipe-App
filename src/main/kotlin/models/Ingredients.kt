@@ -1,7 +1,8 @@
 package models
 
 data class Ingredients (
+    var ingredientId: Int = 0,
     var name: String,
     var quantity: Int,
-    var unit: Int  //grams
+    var weight: Int  //grams
 )

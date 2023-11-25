@@ -1,4 +1,5 @@
 import controllers.RecipeAPI
+import models.Ingredients
 import models.Recipe
 import mu.KotlinLogging
 import utils.ScannerInput.readNextBoolean
@@ -17,6 +18,7 @@ fun runMenu() {
             1 -> addRecipe()
             2 -> listRecipe()
             3 -> searchRecipes()
+            4 -> addIngredientToRecipe()
             0 -> exitApp()
             else -> println("Invalid menu choice: $option")
         }
@@ -110,8 +112,38 @@ fun searchByDifficultyLevel (){
         println(searchResults)
 }
 
-fun exitApp(){
-    logger.info("Exiting...")
-    exitProcess(0)
+//------------
+// ITEM MENU
+//------------
+
+private fun addIngredientToRecipe() {
+    val recipe: Recipe? = askUserToChooseRecipe()
+    if (recipe != null) {
+        val name = readNextLine("\tIngredient Name: ")
+        val quantity = readNextInt("\tIngredient Quantity: ")
+        val weight = readNextInt("\tIngredient weight: ")
+        val ingredient = Ingredients(name = name, quantity = quantity, weight = weight)
+        if (recipe.addIngredient(ingredient))
+            println("Add Successful")
+        else
+            logger.info("Add Not Successful")
+    }
+
+}
+private fun askUserToChooseRecipe(): Recipe? {
+    listRecipe()
+    if (recipeAPI.numberOfRecipes() > 0) {
+        val recipe = recipeAPI.findRecipe(readNextInt("\nEnter the id of the note: "))
+        if (recipe != null) {
+            return recipe
+        } else {
+            println("Recipe id is not valid")
+        }
+    }
+    return null
 }
 
+    fun exitApp() {
+        logger.info("Exiting...")
+        exitProcess(0)
+    }

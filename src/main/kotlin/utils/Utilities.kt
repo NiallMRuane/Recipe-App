@@ -13,4 +13,8 @@ object Utilities {
         notesToFormat
             .joinToString(separator = "\n") { recipe ->  "$recipe" }
 
+    @JvmStatic
+    fun formatSetString(itemsToFormat: Set<Ingredients>): String =
+        itemsToFormat
+            .joinToString(separator = "\n") { ingredient ->  "\t$ingredient" }
 }
