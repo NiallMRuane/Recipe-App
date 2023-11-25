@@ -7,6 +7,8 @@ class RecipeAPI {
 
     private var recipes = ArrayList<Recipe>()
 
+    private var lastId = 0
+    private fun getId() = lastId++
     fun add(recipe: Recipe): Boolean {
         return recipes.add(recipe)
     }
