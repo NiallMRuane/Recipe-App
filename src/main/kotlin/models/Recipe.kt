@@ -1,5 +1,7 @@
 package models
 
+import utils.Utilities
+
 data class Recipe(
     var recipeId: Int = 0,
     var recipeTitle: String,
@@ -18,4 +20,8 @@ data class Recipe(
         return ingredients.add(ingredient)
     }
 
+    fun listIngredients() =
+        if (ingredients.isEmpty()) "\tNo ingredients added"
+        else Utilities.formatSetString(ingredients)
+    fun numberOfIngredients() = ingredients.size
 }
