@@ -20,6 +20,10 @@ data class Recipe(
         return ingredients.add(ingredient)
     }
 
+    fun findIngredient(id: Int): Ingredients? {
+        return ingredients.find { ingredients -> ingredients.ingredientId == id }
+    }
+
     fun listIngredients() =
         if (ingredients.isEmpty()) "\tNo ingredients added"
         else Utilities.formatSetString(ingredients)

@@ -160,6 +160,7 @@ private fun askUserToChooseRecipe(): Recipe? {
     return null
 }
 
+
     fun exitApp() {
         logger.info("Exiting...")
         exitProcess(0)
