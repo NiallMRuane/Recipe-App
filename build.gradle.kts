@@ -31,7 +31,7 @@ dependencies {
     // dependencies for logging
     implementation("io.github.microutils:kotlin-logging:3.0.5")
     implementation("org.slf4j:slf4j-simple:2.0.9")
-    //For Streaming to XML and JSON
+    //For Streaming to XML JSON and YAML
     implementation("com.thoughtworks.xstream:xstream:1.4.18")
     implementation("org.codehaus.jettison:jettison:1.4.1")
     implementation("org.yaml:snakeyaml:1.33")

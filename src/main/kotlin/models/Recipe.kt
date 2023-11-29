@@ -4,11 +4,11 @@ import utils.Utilities
 
 data class Recipe(
     var recipeId: Int = 0,
-    var recipeTitle: String,
-    var cookingTime: Int,  //minutes
-    var difficultyLevel: String,
-    var isRecipeVegan: Boolean,
-    var recipeCreator: String,
+    var recipeTitle: String = "Untitled",
+    var cookingTime: Int = 60,  //minutes
+    var difficultyLevel: String = "Unknown",
+    var isRecipeVegan: Boolean = false,
+    var recipeCreator: String = "Unknown",
     var ingredients: MutableSet<Ingredients> = mutableSetOf()
 )
 {
