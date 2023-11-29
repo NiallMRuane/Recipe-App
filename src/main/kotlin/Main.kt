@@ -23,6 +23,8 @@ fun runMenu() {
             4 -> searchRecipes()
             5 -> addIngredientToRecipe()
             6 -> deleteIngredient()
+            20 -> save()
+            21 -> load()
             0 -> exitApp()
             else -> println("Invalid menu choice: $option")
         }
@@ -45,8 +47,8 @@ fun mainMenu() = readNextInt(
          > |   5) Add ingredients                              |
          > |   6) Delete ingredient                            |
          > -----------------------------------------------------
-         > |   20) Save all recipes                            |
-         > |   21) Load all recipes                            |
+         > |   20) Save all recipes and ingredients            |
+         > |   21) Load all recipes and ingredients            |
          > |   0) Exit                                         |
          > -----------------------------------------------------  
          > ==>> """.trimMargin(">")
@@ -172,7 +174,7 @@ private fun addIngredientToRecipe() {
 private fun askUserToChooseRecipe(): Recipe? {
     listRecipe()
     if (recipeAPI.numberOfRecipes() > 0) {
-        val recipe = recipeAPI.findRecipe(readNextInt("\nEnter the id of the note: "))
+        val recipe = recipeAPI.findRecipe(readNextInt("\nEnter the id of the recipe: "))
         if (recipe != null) {
             return recipe
         } else {
@@ -188,7 +190,7 @@ private fun askUserToChooseIngredient(recipe: Recipe): Ingredients? {
         return recipe.findIngredient(readNextInt("\nEnter the id of the ingredient: "))
     }
     else{
-        logger.info("No ingredients for chosen note")
+        logger.info("No ingredients for chosen recipe")
         return null
     }
 }
@@ -196,7 +198,7 @@ private fun askUserToChooseIngredient(recipe: Recipe): Ingredients? {
 fun save() {
     try {
         recipeAPI.store()
-        logger.info { "All notes successfully saved" }
+        logger.info { "All recipes successfully saved" }
     } catch (e: Exception) {
         System.err.println("Error writing to file: $e")
     }
@@ -205,7 +207,7 @@ fun save() {
 fun load() {
     try {
         recipeAPI.load()
-        logger.info { "All notes successfully loaded" }
+        logger.info { "All recipes successfully loaded" }
     } catch (e: Exception) {
         System.err.println("Error reading from file: $e")
     }
