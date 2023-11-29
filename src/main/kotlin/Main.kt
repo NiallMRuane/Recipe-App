@@ -184,7 +184,7 @@ private fun addIngredientToRecipe() {
         if (recipe != null) {
             val ingredient: Ingredients? = askUserToChooseIngredient(recipe)
             if (ingredient != null) {
-                val isDeleted = recipeAPI.delete(ingredient.ingredientId)
+                val isDeleted = recipe.deleteIngredient(ingredient.ingredientId)
                 if (isDeleted) {
                     println("Delete Successful!")
                 } else {
