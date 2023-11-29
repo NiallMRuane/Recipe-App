@@ -2,13 +2,15 @@ import controllers.RecipeAPI
 import models.Ingredients
 import models.Recipe
 import mu.KotlinLogging
+import persistence.YAMLSerializer
 import utils.ScannerInput.readNextBoolean
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
+import java.io.File
 import kotlin.system.exitProcess
 
 private val logger = KotlinLogging.logger {}
-private val recipeAPI = RecipeAPI()
+private val recipeAPI = RecipeAPI(YAMLSerializer(File("recipe.yaml")))
 fun main() = runMenu()
 
 
@@ -30,7 +32,7 @@ fun runMenu() {
 fun mainMenu() = readNextInt(
     """ 
          > -----------------------------------------------------  
-         > |                  RECIPE APP                  |
+         > |                  RECIPE APP                       |
          > -----------------------------------------------------  
          > | RECIPE MENU                                       |
          > |   1) Add a recipe                                 |
@@ -43,6 +45,8 @@ fun mainMenu() = readNextInt(
          > |   5) Add ingredients                              |
          > |   6) Delete ingredient                            |
          > -----------------------------------------------------
+         > |   20) Save all recipes                            |
+         > |   21) Load all recipes                            |
          > |   0) Exit                                         |
          > -----------------------------------------------------  
          > ==>> """.trimMargin(">")
@@ -186,6 +190,24 @@ private fun askUserToChooseIngredient(recipe: Recipe): Ingredients? {
     else{
         logger.info("No ingredients for chosen note")
         return null
+    }
+}
+
+fun save() {
+    try {
+        recipeAPI.store()
+        logger.info { "All notes successfully saved" }
+    } catch (e: Exception) {
+        System.err.println("Error writing to file: $e")
+    }
+}
+
+fun load() {
+    try {
+        recipeAPI.load()
+        logger.info { "All notes successfully loaded" }
+    } catch (e: Exception) {
+        System.err.println("Error reading from file: $e")
     }
 }
 

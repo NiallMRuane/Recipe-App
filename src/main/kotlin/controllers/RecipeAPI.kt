@@ -1,12 +1,13 @@
 package controllers
 
 import models.Recipe
+import persistence.Serializer
 import utils.Utilities.formatListString
 import java.util.ArrayList
-class RecipeAPI {
+class RecipeAPI(serializerType: Serializer) {
 
+    private var serializer: Serializer = serializerType
     private var recipes = ArrayList<Recipe>()
-
     private var lastId = 0
     private fun getId() = lastId++
 
@@ -35,5 +36,17 @@ class RecipeAPI {
 
     fun searchByDifficultyLevel(searchString : String) =
         formatListString(recipes.filter { recipe -> recipe.difficultyLevel.contains(searchString, ignoreCase = true)})
+
+    @Throws(Exception::class)
+    fun load() {
+        recipes = serializer.read() as ArrayList<Recipe>
+    }
+
+    @Throws(Exception::class)
+    fun store() {
+        serializer.write(recipes)
+
+
+    }
 
 }
