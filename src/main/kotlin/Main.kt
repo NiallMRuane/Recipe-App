@@ -20,6 +20,7 @@ fun runMenu() {
             3 -> listRecipe()
             4 -> searchRecipes()
             5 -> addIngredientToRecipe()
+            6 -> deleteIngredient()
             0 -> exitApp()
             else -> println("Invalid menu choice: $option")
         }
@@ -40,6 +41,7 @@ fun mainMenu() = readNextInt(
          > | ITEM MENU                                         | 
          > -----------------------------------------------------  
          > |   5) Add ingredients                              |
+         > |   6) Delete ingredient                            |
          > -----------------------------------------------------
          > |   0) Exit                                         |
          > -----------------------------------------------------  
@@ -145,8 +147,24 @@ private fun addIngredientToRecipe() {
         else
             logger.info("Add Not Successful")
     }
-
 }
+
+    fun deleteIngredient() {
+        val recipe: Recipe? = askUserToChooseRecipe()
+        if (recipe != null) {
+            val ingredient: Ingredients? = askUserToChooseIngredient(recipe)
+            if (ingredient != null) {
+                val isDeleted = recipeAPI.delete(ingredient.ingredientId)
+                if (isDeleted) {
+                    println("Delete Successful!")
+                } else {
+                    println("Delete NOT Successful")
+                }
+            }
+        }
+    }
+
+
 private fun askUserToChooseRecipe(): Recipe? {
     listRecipe()
     if (recipeAPI.numberOfRecipes() > 0) {
@@ -160,6 +178,16 @@ private fun askUserToChooseRecipe(): Recipe? {
     return null
 }
 
+private fun askUserToChooseIngredient(recipe: Recipe): Ingredients? {
+    if (recipe.numberOfIngredients() > 0) {
+        print(recipe.listIngredients())
+        return recipe.findIngredient(readNextInt("\nEnter the id of the ingredient: "))
+    }
+    else{
+        logger.info("No ingredients for chosen note")
+        return null
+    }
+}
 
     fun exitApp() {
         logger.info("Exiting...")
