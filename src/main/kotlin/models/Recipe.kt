@@ -20,6 +20,10 @@ data class Recipe(
         return ingredients.add(ingredient)
     }
 
+    fun deleteIngredient(id: Int): Boolean {
+        return ingredients.removeIf { ingredients -> ingredients.ingredientId == id}
+    }
+
     fun findIngredient(id: Int): Ingredients? {
         return ingredients.find { ingredients -> ingredients.ingredientId == id }
     }

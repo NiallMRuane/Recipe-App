@@ -19,14 +19,15 @@ fun runMenu() {
         when (val option = mainMenu()) {
             1 -> addRecipe()
             2 -> deleteRecipe()
-            3 -> listRecipe()
-            4 -> searchRecipes()
-            5 -> addIngredientToRecipe()
-            6 -> deleteIngredient()
+            3 -> updateRecipe()
+            4 -> listRecipe()
+            5 -> searchRecipes()
+            6 -> addIngredientToRecipe()
+            7 -> deleteIngredient()
             20 -> save()
             21 -> load()
             0 -> exitApp()
-            else -> println("Invalid menu choice: $option")
+            else -> logger.info("Invalid menu choice: $option")
         }
     } while (true)
 }
@@ -39,13 +40,14 @@ fun mainMenu() = readNextInt(
          > | RECIPE MENU                                       |
          > |   1) Add a recipe                                 |
          > |   2) Delete a recipe                              |
-         > |   3) List recipes                                 |
-         > |   4) Search recipes                               |
+         > |   3) Update recipes                               |
+         > |   4) List recipes                                 |
+         > |   5) Search recipes                               |
          > -----------------------------------------------------  
-         > | ITEM MENU                                         | 
+         > |                  ITEM MENU                        | 
          > -----------------------------------------------------  
-         > |   5) Add ingredients                              |
-         > |   6) Delete ingredient                            |
+         > |   6) Add ingredients                              |
+         > |   7) Delete ingredient                            |
          > -----------------------------------------------------
          > |   20) Save all recipes and ingredients            |
          > |   21) Load all recipes and ingredients            |
@@ -57,11 +59,11 @@ fun mainMenu() = readNextInt(
 // RECIPE MENU
 //------------
 fun addRecipe() {
-    var recipeTitle = readNextLine("Enter a title for the recipe: ")
-    var cookingTime = readNextInt("Enter the cooking time (minutes): ")
-    var difficultyLevel = readNextLine("Enter the difficulty level: ")
-    var isRecipeVegan = readNextBoolean("Is the recipe vegan? (true/false) ")
-    var recipeCreator = readNextLine("Enter the creator name: ")
+    val recipeTitle = readNextLine("Enter a title for the recipe: ")
+    val cookingTime = readNextInt("Enter the cooking time (minutes): ")
+    val difficultyLevel = readNextLine("Enter the difficulty level: ")
+    val isRecipeVegan = readNextBoolean("Is the recipe vegan? (true/false) ")
+    val recipeCreator = readNextLine("Enter the creator name: ")
     val isAdded = recipeAPI.add(Recipe(
         recipeTitle = recipeTitle, cookingTime = cookingTime,
         difficultyLevel = difficultyLevel, isRecipeVegan = isRecipeVegan, recipeCreator = recipeCreator))
@@ -80,6 +82,28 @@ fun deleteRecipe() {
         } else {
             logger.info("Delete NOT Successful")
         }
+    }
+}
+
+fun updateRecipe() {
+    listRecipe()
+    if (recipeAPI.numberOfRecipes() > 0) {
+        val id = readNextInt("Enter the id of the recipe to update: ")
+        if (recipeAPI.findRecipe(id) != null){
+            val recipeTitle = readNextLine("Enter a title for the recipe: ")
+            val cookingTime = readNextInt("Enter the cooking time (minutes): ")
+            val difficultyLevel = readNextLine("Enter the difficulty level: ")
+            val isRecipeVegan = readNextBoolean("Is the recipe vegan? (true/false) ")
+            val recipeCreator = readNextLine("Enter the creator name: ")
+
+            if (recipeAPI.updateRecipe(id, Recipe(0, recipeTitle, cookingTime, difficultyLevel, isRecipeVegan, recipeCreator ))) {
+                println("Update Successful")
+            } else {
+                logger.info("Update Failed")
+            }
+        }
+    } else {
+        logger.info("There are no recipes for this index number")
     }
 }
 
@@ -160,7 +184,7 @@ private fun addIngredientToRecipe() {
         if (recipe != null) {
             val ingredient: Ingredients? = askUserToChooseIngredient(recipe)
             if (ingredient != null) {
-                val isDeleted = recipeAPI.delete(ingredient.ingredientId)
+                val isDeleted = recipe.deleteIngredient(ingredient.ingredientId)
                 if (isDeleted) {
                     println("Delete Successful!")
                 } else {
