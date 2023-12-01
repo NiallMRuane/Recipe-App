@@ -40,11 +40,11 @@ fun mainMenu() = readNextInt(
          > | RECIPE MENU                                       |
          > |   1) Add a recipe                                 |
          > |   2) Delete a recipe                              |
-         > |   3) Update recipes                                 |
+         > |   3) Update recipes                               |
          > |   4) List recipes                                 |
          > |   5) Search recipes                               |
          > -----------------------------------------------------  
-         > | ITEM MENU                                         | 
+         > |                  ITEM MENU                        | 
          > -----------------------------------------------------  
          > |   6) Add ingredients                              |
          > |   7) Delete ingredient                            |
