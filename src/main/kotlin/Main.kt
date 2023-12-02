@@ -62,11 +62,10 @@ fun addRecipe() {
     val recipeTitle = readNextLine("Enter a title for the recipe: ")
     val cookingTime = readNextInt("Enter the cooking time (minutes): ")
     val difficultyLevel = readNextLine("Enter the difficulty level: ")
-    val isRecipeVegan = readNextBoolean("Is the recipe vegan? (true/false) ")
+    val calories = readNextInt("Enter the calorie count: ")
     val recipeCreator = readNextLine("Enter the creator name: ")
     val isAdded = recipeAPI.add(Recipe(
-        recipeTitle = recipeTitle, cookingTime = cookingTime,
-        difficultyLevel = difficultyLevel, isRecipeVegan = isRecipeVegan, recipeCreator = recipeCreator))
+        recipeTitle = recipeTitle, cookingTime = cookingTime, difficultyLevel = difficultyLevel, calories =  calories, recipeCreator = recipeCreator))
 
     if (isAdded) println("Added Successfully")
     else logger.info("Add Failed")
@@ -93,10 +92,10 @@ fun updateRecipe() {
             val recipeTitle = readNextLine("Enter a title for the recipe: ")
             val cookingTime = readNextInt("Enter the cooking time (minutes): ")
             val difficultyLevel = readNextLine("Enter the difficulty level: ")
-            val isRecipeVegan = readNextBoolean("Is the recipe vegan? (true/false) ")
+            val calories = readNextInt("Enter the calorie count:  ")
             val recipeCreator = readNextLine("Enter the creator name: ")
 
-            if (recipeAPI.updateRecipe(id, Recipe(0, recipeTitle, cookingTime, difficultyLevel, isRecipeVegan, recipeCreator ))) {
+            if (recipeAPI.updateRecipe(id, Recipe(0, recipeTitle, cookingTime, difficultyLevel, isRecipeVegan = false, calories, recipeCreator))) {
                 println("Update Successful")
             } else {
                 logger.info("Update Failed")

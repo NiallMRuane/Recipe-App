@@ -25,7 +25,7 @@ class RecipeAPI(serializerType: Serializer) {
             foundRecipe.recipeTitle = recipe.recipeTitle
             foundRecipe.cookingTime = recipe.cookingTime
             foundRecipe.difficultyLevel = recipe.difficultyLevel
-            foundRecipe.isRecipeVegan = recipe.isRecipeVegan
+            foundRecipe.calories = recipe.calories
             foundRecipe.recipeCreator = recipe.recipeCreator
             return true
         }
