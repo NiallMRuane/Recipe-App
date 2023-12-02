@@ -25,6 +25,22 @@ data class Recipe(
         return ingredients.removeIf { ingredients -> ingredients.ingredientId == id}
     }
 
+    fun findOneIngredient(id: Int): Ingredients?{
+        return ingredients.find{ ingredients -> ingredients.ingredientId == id }
+    }
+
+    fun updateIngredient(id: Int, newIngredients : Ingredients): Boolean {
+        val foundItem = findOneIngredient(id)
+        if (foundItem != null){
+            foundItem.name = newIngredients.name
+            foundItem.quantity = newIngredients.quantity
+            foundItem.weight = newIngredients.weight
+            return true
+        }
+        return false
+    }
+
+
     fun findIngredient(id: Int): Ingredients? {
         return ingredients.find { ingredients -> ingredients.ingredientId == id }
     }
