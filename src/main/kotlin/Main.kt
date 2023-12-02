@@ -22,8 +22,9 @@ fun runMenu() {
             3 -> updateRecipe()
             4 -> listRecipe()
             5 -> searchRecipes()
-            6 -> addIngredientToRecipe()
-            7 -> deleteIngredient()
+            6 -> markRecipeVegan()
+            7 -> addIngredientToRecipe()
+            8 -> deleteIngredient()
             20 -> save()
             21 -> load()
             0 -> exitApp()
@@ -43,11 +44,12 @@ fun mainMenu() = readNextInt(
          > |   3) Update recipes                               |
          > |   4) List recipes                                 |
          > |   5) Search recipes                               |
+         > |   6) Mark recipe as vegan                         |
          > -----------------------------------------------------  
          > |                  ITEM MENU                        | 
          > -----------------------------------------------------  
-         > |   6) Add ingredients                              |
-         > |   7) Delete ingredient                            |
+         > |   7) Add ingredients                              |
+         > |   8) Delete ingredient                            |
          > -----------------------------------------------------
          > |   20) Save all recipes and ingredients            |
          > |   21) Load all recipes and ingredients            |
@@ -110,6 +112,26 @@ fun listRecipe() = if (recipeAPI.numberOfRecipes() > 0)
     println(recipeAPI.listRecipes())
 else
     logger.info("No recipes stored")
+
+fun listVeganRecipes(){
+    println(recipeAPI.listVeganRecipes())
+}
+
+fun listNonVeganRecipes() {
+    println(recipeAPI.listNonVeganRecipes())
+}
+
+fun markRecipeVegan() {
+    listNonVeganRecipes()
+    if (recipeAPI.numberofNonVeganRecipes() > 0) {
+        val indexToMark = readNextInt("Enter the index of the recipe to mark vegan: ")
+        if (recipeAPI.markRecipeVegan(indexToMark)) {
+            println("Recipe marked vegan successfully!")
+        } else {
+            logger.info("Recipe NOT marked vegan successfully")
+        }
+    }
+}
 
 //--------------------
 //  SEARCH FOR RECIPES
