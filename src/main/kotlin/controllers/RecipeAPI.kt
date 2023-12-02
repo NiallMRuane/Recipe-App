@@ -35,29 +35,23 @@ class RecipeAPI(serializerType: Serializer) {
     fun listRecipes(): String =
         if (recipes.isEmpty()) "No recipes stored"
         else formatListString(recipes)
-
     fun listNonVeganRecipes(): String =
-        if(numberofNonVeganRecipes() == 0) "No non vegan recipes stored"
+        if(numberOfNonVeganRecipes() == 0) "No non vegan recipes stored"
         else formatListString(recipes.filter { recipe -> !recipe.isRecipeVegan})
-
     fun listVeganRecipes(): String =
         if (numberOfVeganRecipes() == 0) "No vegan recipes stored"
         else formatListString(recipes.filter { recipe -> recipe.isRecipeVegan})
 
     fun numberOfRecipes() = recipes.size
-
-    fun numberofNonVeganRecipes(): Int = recipes.count{recipe: Recipe -> !recipe.isRecipeVegan}
-
+    fun numberOfNonVeganRecipes(): Int = recipes.count{recipe: Recipe -> !recipe.isRecipeVegan}
     fun numberOfVeganRecipes(): Int = recipes.count{recipe: Recipe -> recipe.isRecipeVegan}
 
     fun findRecipe(recipeId : Int) =  recipes.find{ recipe -> recipe.recipeId == recipeId }
 
     fun searchByTitle(searchString : String) =
         formatListString(recipes.filter { recipe -> recipe.recipeTitle.contains(searchString, ignoreCase = true)})
-
     fun searchByCookingTime(cookingTime : Int) =
         formatListString(recipes.filter { recipe -> recipe.cookingTime == cookingTime})
-
     fun searchByDifficultyLevel(searchString : String) =
         formatListString(recipes.filter { recipe -> recipe.difficultyLevel.contains(searchString, ignoreCase = true)})
 
@@ -79,6 +73,7 @@ class RecipeAPI(serializerType: Serializer) {
         }
         return false
     }
+
 
     @Throws(Exception::class)
     fun load() {
