@@ -23,10 +23,12 @@ fun runMenu() {
             4 -> listRecipes()
             5 -> searchRecipes()
             6 -> markRecipeVegan()
-            7 -> addIngredientToRecipe()
-            8 -> deleteIngredient()
-            9 -> updateIngredient()
-            10 -> searchIngredientName()
+            7 -> sortRecipes()
+            8 -> addIngredientToRecipe()
+            9 -> deleteIngredient()
+            10 -> updateIngredient()
+            11 -> searchIngredientName()
+
             20 -> save()
             21 -> load()
             0 -> exitApp()
@@ -47,13 +49,14 @@ fun mainMenu() = readNextInt(
          > |   4) List recipes                                 |
          > |   5) Search recipes                               |
          > |   6) Mark recipe as vegan                         |
+         > |   7) Sort recipes                                 |
          > -----------------------------------------------------  
          > |                  ITEM MENU                        | 
          > -----------------------------------------------------  
-         > |   7) Add ingredients                              |
-         > |   8) Delete ingredient                            |
-         > |   9) Update ingredient                            |
-         > |   10) Search ingredient by name                   |
+         > |   8) Add ingredients                              |
+         > |   9) Delete ingredient                            |
+         > |   10) Update ingredient                            |
+         > |   11) Search ingredient by name                   |
          > -----------------------------------------------------
          > |   20) Save all recipes and ingredients            |
          > |   21) Load all recipes and ingredients            |
@@ -232,6 +235,72 @@ fun searchByCalories() {
     } else {
         logger.info("Option Invalid, no recipes found")
     }
+}
+
+fun sortRecipes(){
+    if (recipeAPI.numberOfRecipes() > 0) {
+        val option = readNextInt(
+            """
+                  > -------------------------------------
+                  > |   1) Sort by calories              |
+                  > |   2) Sort by cooking time          |
+                  > -------------------------------------
+         > ==>> """.trimMargin(">"))
+
+        when (option) {
+            1 -> {
+                val calorieOption = readNextInt(
+                    """
+                  > --------------------------------
+                  > |   1) Ascending                |
+                  > |   2) Descending               |
+                  > --------------------------------
+         > ==>> """.trimMargin(">"))
+                when (calorieOption) {
+                    1 -> sortCaloriesAsc()
+                    2 -> sortCaloriesDesc()
+                    else -> logger.info("Invalid option entered: $calorieOption");
+                }
+            }
+            2 -> {
+                val cookingTimeOption = readNextInt(
+                    """
+                  > --------------------------------
+                  > |   1) Ascending                |
+                  > |   2) Descending               |
+                  > --------------------------------
+         > ==>> """.trimMargin(">"))
+                when (cookingTimeOption) {
+                    1 -> sortCookingTimeAsc()
+                    2 -> sortCookingTimeDesc()
+                    else -> logger.info("Invalid option entered: $cookingTimeOption");
+                }
+            }
+            else -> logger.info("Invalid option entered: $option")
+        }
+    } else {
+        logger.info("Option Invalid - No recipes stored")
+    }
+}
+
+fun sortCaloriesAsc (){
+    val ascCalories = recipeAPI.sortByCaloriesAsc()
+    println("Recipes ascending by calories: \n $ascCalories")
+}
+
+fun sortCaloriesDesc (){
+    val descCalories = recipeAPI.sortByCaloriesDesc()
+    println("Recipes ascending by calories: \n $descCalories")
+}
+
+fun sortCookingTimeAsc (){
+    val ascCookingTime = recipeAPI.sortByCookingTimeAsc()
+    println("Recipes ascending by cooking time: \n$ascCookingTime")
+}
+
+fun sortCookingTimeDesc (){
+    val descCookingTime = recipeAPI.sortByCookingTimeDesc()
+    println("Recipes ascending by cooking time: \n$descCookingTime")
 }
 //------------
 // ITEM MENU
