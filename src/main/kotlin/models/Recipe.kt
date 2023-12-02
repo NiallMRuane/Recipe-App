@@ -8,6 +8,7 @@ data class Recipe(
     var cookingTime: Int = 60,  //minutes
     var difficultyLevel: String = "Unknown",
     var isRecipeVegan: Boolean = false,
+    var calories: Int = 500,
     var recipeCreator: String = "Unknown",
     var ingredients: MutableSet<Ingredients> = mutableSetOf()
 )

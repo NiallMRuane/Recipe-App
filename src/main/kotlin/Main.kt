@@ -20,10 +20,11 @@ fun runMenu() {
             1 -> addRecipe()
             2 -> deleteRecipe()
             3 -> updateRecipe()
-            4 -> listRecipe()
+            4 -> listRecipes()
             5 -> searchRecipes()
-            6 -> addIngredientToRecipe()
-            7 -> deleteIngredient()
+            6 -> markRecipeVegan()
+            7 -> addIngredientToRecipe()
+            8 -> deleteIngredient()
             20 -> save()
             21 -> load()
             0 -> exitApp()
@@ -43,11 +44,12 @@ fun mainMenu() = readNextInt(
          > |   3) Update recipes                               |
          > |   4) List recipes                                 |
          > |   5) Search recipes                               |
+         > |   6) Mark recipe as vegan                         |
          > -----------------------------------------------------  
          > |                  ITEM MENU                        | 
          > -----------------------------------------------------  
-         > |   6) Add ingredients                              |
-         > |   7) Delete ingredient                            |
+         > |   7) Add ingredients                              |
+         > |   8) Delete ingredient                            |
          > -----------------------------------------------------
          > |   20) Save all recipes and ingredients            |
          > |   21) Load all recipes and ingredients            |
@@ -62,11 +64,10 @@ fun addRecipe() {
     val recipeTitle = readNextLine("Enter a title for the recipe: ")
     val cookingTime = readNextInt("Enter the cooking time (minutes): ")
     val difficultyLevel = readNextLine("Enter the difficulty level: ")
-    val isRecipeVegan = readNextBoolean("Is the recipe vegan? (true/false) ")
+    val calories = readNextInt("Enter the calorie count: ")
     val recipeCreator = readNextLine("Enter the creator name: ")
     val isAdded = recipeAPI.add(Recipe(
-        recipeTitle = recipeTitle, cookingTime = cookingTime,
-        difficultyLevel = difficultyLevel, isRecipeVegan = isRecipeVegan, recipeCreator = recipeCreator))
+        recipeTitle = recipeTitle, cookingTime = cookingTime, difficultyLevel = difficultyLevel, calories =  calories, recipeCreator = recipeCreator))
 
     if (isAdded) println("Added Successfully")
     else logger.info("Add Failed")
@@ -93,10 +94,10 @@ fun updateRecipe() {
             val recipeTitle = readNextLine("Enter a title for the recipe: ")
             val cookingTime = readNextInt("Enter the cooking time (minutes): ")
             val difficultyLevel = readNextLine("Enter the difficulty level: ")
-            val isRecipeVegan = readNextBoolean("Is the recipe vegan? (true/false) ")
+            val calories = readNextInt("Enter the calorie count:  ")
             val recipeCreator = readNextLine("Enter the creator name: ")
 
-            if (recipeAPI.updateRecipe(id, Recipe(0, recipeTitle, cookingTime, difficultyLevel, isRecipeVegan, recipeCreator ))) {
+            if (recipeAPI.updateRecipe(id, Recipe(0, recipeTitle, cookingTime, difficultyLevel, isRecipeVegan = false, calories, recipeCreator))) {
                 println("Update Successful")
             } else {
                 logger.info("Update Failed")
@@ -107,10 +108,52 @@ fun updateRecipe() {
     }
 }
 
+fun listRecipes(){
+    if (recipeAPI.numberOfRecipes() > 0) {
+        val option = readNextInt(
+            """
+                  > --------------------------------
+                  > |   1) View ALL recipes        |
+                  > |   2) View non vegan recipes  |
+                  > |   3) View vegan recipes      |
+                  > --------------------------------
+         > ==>> """.trimMargin(">"))
+
+        when (option) {
+            1 -> listRecipe()
+            2 -> listNonVeganRecipes()
+            3 -> listVeganRecipes()
+            else -> logger.info("Invalid option entered: $option")
+        }
+    } else {
+        logger.info("Option Invalid - No recipes stored")
+    }
+}
+
 fun listRecipe() = if (recipeAPI.numberOfRecipes() > 0)
     println(recipeAPI.listRecipes())
 else
     logger.info("No recipes stored")
+
+fun listVeganRecipes(){
+    println(recipeAPI.listVeganRecipes())
+}
+
+fun listNonVeganRecipes() {
+    println(recipeAPI.listNonVeganRecipes())
+}
+
+fun markRecipeVegan() {
+    listNonVeganRecipes()
+    if (recipeAPI.numberofNonVeganRecipes() > 0) {
+        val indexToMark = readNextInt("Enter the index of the recipe to mark vegan: ")
+        if (recipeAPI.markRecipeVegan(indexToMark)) {
+            println("Recipe marked vegan successfully!")
+        } else {
+            logger.info("Recipe NOT marked vegan successfully")
+        }
+    }
+}
 
 //--------------------
 //  SEARCH FOR RECIPES
@@ -160,6 +203,7 @@ fun searchByDifficultyLevel (){
     else
         println(searchResults)
 }
+
 
 //------------
 // ITEM MENU
