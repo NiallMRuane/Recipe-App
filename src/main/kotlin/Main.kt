@@ -120,13 +120,13 @@ fun listRecipes(){
          > ==>> """.trimMargin(">"))
 
         when (option) {
-            1 -> listRecipe();
-            2 -> listNonVeganRecipes();
-            3 -> listVeganRecipes();
-            else -> logger.info("Invalid option entered: $option");
+            1 -> listRecipe()
+            2 -> listNonVeganRecipes()
+            3 -> listVeganRecipes()
+            else -> logger.info("Invalid option entered: $option")
         }
     } else {
-        logger.info("Option Invalid - No recipes stored");
+        logger.info("Option Invalid - No recipes stored")
     }
 }
 
