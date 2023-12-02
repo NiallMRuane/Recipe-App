@@ -171,6 +171,7 @@ fun searchRecipes(){
                   > |   1) Search by title               |
                   > |   2) Search by cooking time        |
                   > |   3) Search by difficulty level    |
+                  > |   4) Search by calories            |
                   > -------------------------------------
          > ==>> """.trimMargin(">"))
 
@@ -178,6 +179,7 @@ fun searchRecipes(){
             1 -> searchByTitle()
             2 -> searchByCookingTime()
             3 -> searchByDifficultyLevel()
+            4 -> searchByCalories()
             else -> logger.info("Invalid option entered: $option")
         }
     } else {
@@ -185,30 +187,52 @@ fun searchRecipes(){
     }
 }
 fun searchByTitle (){
+    if (recipeAPI.numberOfRecipes() > 0) {
     val searchTitle = readNextLine("Enter the title to search by: ")
     val searchResults = recipeAPI.searchByTitle(searchTitle)
     if (searchResults.isEmpty()) logger.info("No recipes found")
     else
         println(searchResults)
+    } else {
+        logger.info("Option Invalid, no recipes found")
+    }
 }
 
 fun searchByCookingTime (){
+    if (recipeAPI.numberOfRecipes() > 0) {
     val searchCookingTime = readNextInt("Enter the cooking time to search by: ")
     val searchResults = recipeAPI.searchByCookingTime(searchCookingTime)
     if (searchResults.isEmpty()) logger.info("No recipes found")
     else
         println(searchResults)
+    } else {
+        logger.info("Option Invalid, no recipes found")
+    }
 }
 
 fun searchByDifficultyLevel (){
+    if (recipeAPI.numberOfRecipes() > 0) {
     val searchDifficulty = readNextLine("Enter the difficulty level to search by: ")
     val searchResults = recipeAPI.searchByDifficultyLevel(searchDifficulty)
     if (searchResults.isEmpty()) logger.info("No recipes found")
     else
         println(searchResults)
+    } else {
+    logger.info("Option Invalid, no recipes found")
+   }
 }
 
-
+fun searchByCalories() {
+    if (recipeAPI.numberOfRecipes() > 0) {
+        val maxCalories = readNextInt("Enter the max amount of calories: ")
+        val searchResults = recipeAPI.searchByCalories(maxCalories)
+        if (searchResults.isEmpty()) logger.info("No recipes found with calories equal, or below $maxCalories")
+        else
+            println(searchResults)
+    } else {
+        logger.info("Option Invalid, no recipes found")
+    }
+}
 //------------
 // ITEM MENU
 //------------
@@ -262,12 +286,14 @@ fun updateIngredient() {
 }
 
 fun searchIngredientName() {
-    val searchName = readNextLine("Enter the ingredient name to search by: ")
-    val searchResults = recipeAPI.searchIngredientByName(searchName)
-    if (searchResults.isEmpty()) {
-        logger.info("No ingredients found")
-    } else {
-        println(searchResults)
+    if (recipeAPI.numberOfRecipes() > 0) {
+        val searchName = readNextLine("Enter the ingredient name to search by: ")
+        val searchResults = recipeAPI.searchIngredientByName(searchName)
+        if (searchResults.isEmpty()) {
+            logger.info("No ingredients found")
+        } else {
+            println(searchResults)
+        }
     }
 }
 

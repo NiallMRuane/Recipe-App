@@ -55,6 +55,9 @@ class RecipeAPI(serializerType: Serializer) {
     fun searchByDifficultyLevel(searchString : String) =
         formatListString(recipes.filter { recipe -> recipe.difficultyLevel.contains(searchString, ignoreCase = true)})
 
+    fun searchByCalories(maxCalories: Int) =
+        formatListString((recipes.filter { recipe -> recipe.calories <= maxCalories}))
+
     fun searchIngredientByName(searchString: String): String {
         return if (numberOfRecipes() == 0) "No recipes stored"
         else {
@@ -88,6 +91,7 @@ class RecipeAPI(serializerType: Serializer) {
         }
         return false
     }
+
 
 
     @Throws(Exception::class)
