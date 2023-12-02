@@ -20,7 +20,7 @@ fun runMenu() {
             1 -> addRecipe()
             2 -> deleteRecipe()
             3 -> updateRecipe()
-            4 -> listRecipe()
+            4 -> listRecipes()
             5 -> searchRecipes()
             6 -> markRecipeVegan()
             7 -> addIngredientToRecipe()
@@ -105,6 +105,28 @@ fun updateRecipe() {
         }
     } else {
         logger.info("There are no recipes for this index number")
+    }
+}
+
+fun listRecipes(){
+    if (recipeAPI.numberOfRecipes() > 0) {
+        val option = readNextInt(
+            """
+                  > --------------------------------
+                  > |   1) View ALL recipes        |
+                  > |   2) View non vegan recipes  |
+                  > |   3) View vegan recipes      |
+                  > --------------------------------
+         > ==>> """.trimMargin(">"))
+
+        when (option) {
+            1 -> listRecipe();
+            2 -> listNonVeganRecipes();
+            3 -> listVeganRecipes();
+            else -> logger.info("Invalid option entered: $option");
+        }
+    } else {
+        logger.info("Option Invalid - No recipes stored");
     }
 }
 
