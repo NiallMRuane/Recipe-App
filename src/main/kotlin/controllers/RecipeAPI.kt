@@ -49,6 +49,25 @@ class RecipeAPI(serializerType: Serializer) {
     fun searchByDifficultyLevel(searchString : String) =
         formatListString(recipes.filter { recipe -> recipe.difficultyLevel.contains(searchString, ignoreCase = true)})
 
+    fun isValidListIndex(index: Int, list: List<Any>): Boolean {
+        return (index >= 0 && index < list.size)
+    }
+
+    fun isValidIndex(index: Int): Boolean {
+        return isValidListIndex(index, recipes)
+    }
+
+    fun markRecipeVegan(indexToVegan: Int): Boolean {
+        if (isValidIndex(indexToVegan)) {
+            val recipeToMark = recipes[indexToVegan]
+            if (!recipeToMark.isRecipeVegan) {
+                recipeToMark.isRecipeVegan = true
+                return true
+            }
+        }
+        return false
+    }
+
     @Throws(Exception::class)
     fun load() {
         recipes = serializer.read() as ArrayList<Recipe>
