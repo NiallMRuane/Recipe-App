@@ -26,6 +26,7 @@ fun runMenu() {
             7 -> addIngredientToRecipe()
             8 -> deleteIngredient()
             9 -> updateIngredient()
+            10 -> searchIngredientName()
             20 -> save()
             21 -> load()
             0 -> exitApp()
@@ -52,6 +53,7 @@ fun mainMenu() = readNextInt(
          > |   7) Add ingredients                              |
          > |   8) Delete ingredient                            |
          > |   9) Update ingredient                            |
+         > |   10) Search ingredient by name                   |
          > -----------------------------------------------------
          > |   20) Save all recipes and ingredients            |
          > |   21) Load all recipes and ingredients            |
@@ -259,6 +261,16 @@ fun updateIngredient() {
     }
 }
 
+fun searchIngredientName() {
+    val searchName = readNextLine("Enter the ingredient name to search by: ")
+    val searchResults = recipeAPI.searchIngredientByName(searchName)
+    if (searchResults.isEmpty()) {
+        logger.info("No ingredients found")
+    } else {
+        println(searchResults)
+    }
+}
+
 private fun askUserToChooseRecipe(): Recipe? {
     listRecipe()
     if (recipeAPI.numberOfRecipes() > 0) {
@@ -266,7 +278,7 @@ private fun askUserToChooseRecipe(): Recipe? {
         if (recipe != null) {
             return recipe
         } else {
-            println("Recipe id is not valid")
+            logger.info("Recipe id is not valid")
         }
     }
     return null

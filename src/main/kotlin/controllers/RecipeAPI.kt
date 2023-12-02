@@ -55,6 +55,21 @@ class RecipeAPI(serializerType: Serializer) {
     fun searchByDifficultyLevel(searchString : String) =
         formatListString(recipes.filter { recipe -> recipe.difficultyLevel.contains(searchString, ignoreCase = true)})
 
+    fun searchIngredientByName(searchString: String): String {
+        return if (numberOfRecipes() == 0) "No recipes stored"
+        else {
+            var listOfRecipes = ""
+            for (recipe in recipes) {
+                for (ingredients in recipe.ingredients) {
+                    if (ingredients.name.contains(searchString, ignoreCase = true)) {
+                        listOfRecipes += "${recipe.recipeId}: ${recipe.recipeTitle} \n\t${ingredients}\n"
+                    }
+                }
+            }
+            if (listOfRecipes == "") "No items found for: $searchString"
+            else listOfRecipes
+        }
+    }
     fun isValidListIndex(index: Int, list: List<Any>): Boolean {
         return (index >= 0 && index < list.size)
     }
