@@ -23,10 +23,12 @@ fun runMenu() {
             4 -> listRecipes()
             5 -> searchRecipes()
             6 -> markRecipeVegan()
-            7 -> addIngredientToRecipe()
-            8 -> deleteIngredient()
-            9 -> updateIngredient()
-            10 -> searchIngredientName()
+            7 -> sortRecipes()
+            8 -> addIngredientToRecipe()
+            9 -> deleteIngredient()
+            10 -> updateIngredient()
+            11 -> searchIngredientName()
+
             20 -> save()
             21 -> load()
             0 -> exitApp()
@@ -47,13 +49,14 @@ fun mainMenu() = readNextInt(
          > |   4) List recipes                                 |
          > |   5) Search recipes                               |
          > |   6) Mark recipe as vegan                         |
+         > |   7) Sort recipes                                 |
          > -----------------------------------------------------  
          > |                  ITEM MENU                        | 
          > -----------------------------------------------------  
-         > |   7) Add ingredients                              |
-         > |   8) Delete ingredient                            |
-         > |   9) Update ingredient                            |
-         > |   10) Search ingredient by name                   |
+         > |   8) Add ingredients                              |
+         > |   9) Delete ingredient                            |
+         > |   10) Update ingredient                            |
+         > |   11) Search ingredient by name                   |
          > -----------------------------------------------------
          > |   20) Save all recipes and ingredients            |
          > |   21) Load all recipes and ingredients            |
@@ -171,6 +174,7 @@ fun searchRecipes(){
                   > |   1) Search by title               |
                   > |   2) Search by cooking time        |
                   > |   3) Search by difficulty level    |
+                  > |   4) Search by calories            |
                   > -------------------------------------
          > ==>> """.trimMargin(">"))
 
@@ -178,6 +182,7 @@ fun searchRecipes(){
             1 -> searchByTitle()
             2 -> searchByCookingTime()
             3 -> searchByDifficultyLevel()
+            4 -> searchByCalories()
             else -> logger.info("Invalid option entered: $option")
         }
     } else {
@@ -185,30 +190,118 @@ fun searchRecipes(){
     }
 }
 fun searchByTitle (){
+    if (recipeAPI.numberOfRecipes() > 0) {
     val searchTitle = readNextLine("Enter the title to search by: ")
     val searchResults = recipeAPI.searchByTitle(searchTitle)
     if (searchResults.isEmpty()) logger.info("No recipes found")
     else
         println(searchResults)
+    } else {
+        logger.info("Option Invalid, no recipes found")
+    }
 }
 
 fun searchByCookingTime (){
+    if (recipeAPI.numberOfRecipes() > 0) {
     val searchCookingTime = readNextInt("Enter the cooking time to search by: ")
     val searchResults = recipeAPI.searchByCookingTime(searchCookingTime)
     if (searchResults.isEmpty()) logger.info("No recipes found")
     else
         println(searchResults)
+    } else {
+        logger.info("Option Invalid, no recipes found")
+    }
 }
 
 fun searchByDifficultyLevel (){
+    if (recipeAPI.numberOfRecipes() > 0) {
     val searchDifficulty = readNextLine("Enter the difficulty level to search by: ")
     val searchResults = recipeAPI.searchByDifficultyLevel(searchDifficulty)
     if (searchResults.isEmpty()) logger.info("No recipes found")
     else
         println(searchResults)
+    } else {
+    logger.info("Option Invalid, no recipes found")
+   }
 }
 
+fun searchByCalories() {
+    if (recipeAPI.numberOfRecipes() > 0) {
+        val maxCalories = readNextInt("Enter the max amount of calories: ")
+        val searchResults = recipeAPI.searchByCalories(maxCalories)
+        if (searchResults.isEmpty()) logger.info("No recipes found with calories equal, or below $maxCalories")
+        else
+            println(searchResults)
+    } else {
+        logger.info("Option Invalid, no recipes found")
+    }
+}
 
+fun sortRecipes(){
+    if (recipeAPI.numberOfRecipes() > 0) {
+        val option = readNextInt(
+            """
+                  > -------------------------------------
+                  > |   1) Sort by calories              |
+                  > |   2) Sort by cooking time          |
+                  > -------------------------------------
+         > ==>> """.trimMargin(">"))
+
+        when (option) {
+            1 -> {
+                val calorieOption = readNextInt(
+                    """
+                  > --------------------------------
+                  > |   1) Ascending                |
+                  > |   2) Descending               |
+                  > --------------------------------
+         > ==>> """.trimMargin(">"))
+                when (calorieOption) {
+                    1 -> sortCaloriesAsc()
+                    2 -> sortCaloriesDesc()
+                    else -> logger.info("Invalid option entered: $calorieOption");
+                }
+            }
+            2 -> {
+                val cookingTimeOption = readNextInt(
+                    """
+                  > --------------------------------
+                  > |   1) Ascending                |
+                  > |   2) Descending               |
+                  > --------------------------------
+         > ==>> """.trimMargin(">"))
+                when (cookingTimeOption) {
+                    1 -> sortCookingTimeAsc()
+                    2 -> sortCookingTimeDesc()
+                    else -> logger.info("Invalid option entered: $cookingTimeOption");
+                }
+            }
+            else -> logger.info("Invalid option entered: $option")
+        }
+    } else {
+        logger.info("Option Invalid - No recipes stored")
+    }
+}
+
+fun sortCaloriesAsc (){
+    val ascCalories = recipeAPI.sortByCaloriesAsc()
+    println("Recipes ascending by calories: \n $ascCalories")
+}
+
+fun sortCaloriesDesc (){
+    val descCalories = recipeAPI.sortByCaloriesDesc()
+    println("Recipes ascending by calories: \n $descCalories")
+}
+
+fun sortCookingTimeAsc (){
+    val ascCookingTime = recipeAPI.sortByCookingTimeAsc()
+    println("Recipes ascending by cooking time: \n$ascCookingTime")
+}
+
+fun sortCookingTimeDesc (){
+    val descCookingTime = recipeAPI.sortByCookingTimeDesc()
+    println("Recipes ascending by cooking time: \n$descCookingTime")
+}
 //------------
 // ITEM MENU
 //------------
@@ -262,12 +355,14 @@ fun updateIngredient() {
 }
 
 fun searchIngredientName() {
-    val searchName = readNextLine("Enter the ingredient name to search by: ")
-    val searchResults = recipeAPI.searchIngredientByName(searchName)
-    if (searchResults.isEmpty()) {
-        logger.info("No ingredients found")
-    } else {
-        println(searchResults)
+    if (recipeAPI.numberOfRecipes() > 0) {
+        val searchName = readNextLine("Enter the ingredient name to search by: ")
+        val searchResults = recipeAPI.searchIngredientByName(searchName)
+        if (searchResults.isEmpty()) {
+            logger.info("No ingredients found")
+        } else {
+            println(searchResults)
+        }
     }
 }
 

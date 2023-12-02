@@ -54,6 +54,8 @@ class RecipeAPI(serializerType: Serializer) {
         formatListString(recipes.filter { recipe -> recipe.cookingTime == cookingTime})
     fun searchByDifficultyLevel(searchString : String) =
         formatListString(recipes.filter { recipe -> recipe.difficultyLevel.contains(searchString, ignoreCase = true)})
+    fun searchByCalories(maxCalories: Int) =
+        formatListString((recipes.filter { recipe -> recipe.calories <= maxCalories}))
 
     fun searchIngredientByName(searchString: String): String {
         return if (numberOfRecipes() == 0) "No recipes stored"
@@ -70,6 +72,15 @@ class RecipeAPI(serializerType: Serializer) {
             else listOfRecipes
         }
     }
+
+    fun sortByCaloriesAsc() =
+        formatListString(recipes.sortedWith(compareBy { it.calories }))
+    fun sortByCaloriesDesc() =
+        formatListString(recipes.sortedWith(compareBy { recipe -> recipe.calories }).reversed())
+    fun sortByCookingTimeAsc() =
+        formatListString(recipes.sortedWith(compareBy { it.cookingTime }))
+    fun sortByCookingTimeDesc() =
+        formatListString(recipes.sortedWith(compareBy { recipe -> recipe.cookingTime }).reversed())
     fun isValidListIndex(index: Int, list: List<Any>): Boolean {
         return (index >= 0 && index < list.size)
     }
@@ -88,6 +99,7 @@ class RecipeAPI(serializerType: Serializer) {
         }
         return false
     }
+
 
 
     @Throws(Exception::class)
