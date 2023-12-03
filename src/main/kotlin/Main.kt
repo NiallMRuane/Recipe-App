@@ -10,12 +10,10 @@ import models.Recipe
 import mu.KotlinLogging
 import persistence.YAMLSerializer
 import utils.ScannerInput
-import utils.ScannerInput.readNextBoolean
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
 import java.io.File
 import kotlin.system.exitProcess
-
 
 /**
  * Logger for the Recipe Application.
@@ -78,9 +76,9 @@ fun mainMenu() = readNextInt(
       -----------------------------------------------
    ==>> """
 )
-//------------
+// ------------
 // RECIPE MENU
-//------------
+// ------------
 
 /**
  * Adds a new recipe to the application.
@@ -91,11 +89,21 @@ fun addRecipe() {
     val difficultyLevel = readNextLine("Enter the difficulty level: ")
     val calories = readNextInt("Enter the calorie count: ")
     val recipeCreator = readNextLine("Enter the creator name: ")
-    val isAdded = recipeAPI.add(Recipe(
-        recipeTitle = recipeTitle, cookingTime = cookingTime, difficultyLevel = difficultyLevel, calories =  calories, recipeCreator = recipeCreator))
+    val isAdded = recipeAPI.add(
+        Recipe(
+            recipeTitle = recipeTitle,
+            cookingTime = cookingTime,
+            difficultyLevel = difficultyLevel,
+            calories = calories,
+            recipeCreator = recipeCreator
+        )
+    )
 
-    if (isAdded) println("Added Successfully")
-    else logger.info("Add Failed")
+    if (isAdded) {
+        println("Added Successfully")
+    } else {
+        logger.info("Add Failed")
+    }
 }
 
 /**
@@ -121,7 +129,7 @@ fun updateRecipe() {
     listRecipe()
     if (recipeAPI.numberOfRecipes() > 0) {
         val id = readNextInt("Enter the id of the recipe to update: ")
-        if (recipeAPI.findRecipe(id) != null){
+        if (recipeAPI.findRecipe(id) != null) {
             val recipeTitle = readNextLine("Enter a title for the recipe: ")
             val cookingTime = readNextInt("Enter the cooking time (minutes): ")
             val difficultyLevel = readNextLine("Enter the difficulty level: ")
@@ -142,7 +150,7 @@ fun updateRecipe() {
 /**
  * Lists recipes based on user preferences.
  */
-fun listRecipes(){
+fun listRecipes() {
     if (recipeAPI.numberOfRecipes() > 0) {
         val option = readNextInt(
             """
@@ -151,7 +159,8 @@ fun listRecipes(){
                   > |   2) View non vegan recipes  |
                   > |   3) View vegan recipes      |
                   > --------------------------------
-         > ==>> """.trimMargin(">"))
+         > ==>> """.trimMargin(">")
+        )
 
         when (option) {
             1 -> listRecipe()
@@ -167,15 +176,16 @@ fun listRecipes(){
 /**
  * Lists all recipes in the application.
  */
-fun listRecipe() = if (recipeAPI.numberOfRecipes() > 0)
+fun listRecipe() = if (recipeAPI.numberOfRecipes() > 0) {
     println(recipeAPI.listRecipes())
-else
+} else {
     logger.info("No recipes stored")
+}
 
 /**
  * Lists all recipes marked as vegan in the application.
  */
-fun listVeganRecipes(){
+fun listVeganRecipes() {
     println(recipeAPI.listVeganRecipes())
 }
 
@@ -201,15 +211,15 @@ fun markRecipeVegan() {
     }
 }
 
-//--------------------
+// --------------------
 //  SEARCH FOR RECIPES
-//--------------------
+// --------------------
 
 /**
  * Searches for recipes based on user input, allowing various search criteria.
  * Displays a menu with options to search by title, cooking time, difficulty level, or calories.
  */
-fun searchRecipes(){
+fun searchRecipes() {
     if (recipeAPI.numberOfRecipes() > 0) {
         val option = readNextInt(
             """
@@ -219,7 +229,8 @@ fun searchRecipes(){
                   > |   3) Search by difficulty level    |
                   > |   4) Search by calories            |
                   > -------------------------------------
-         > ==>> """.trimMargin(">"))
+         > ==>> """.trimMargin(">")
+        )
 
         when (option) {
             1 -> searchByTitle()
@@ -237,13 +248,15 @@ fun searchRecipes(){
  * Searches for recipes by title.
  * Prompts the user to enter the title to search by and displays the matching results.
  */
-fun searchByTitle (){
+fun searchByTitle() {
     if (recipeAPI.numberOfRecipes() > 0) {
-    val searchTitle = readNextLine("Enter the title to search by: ")
-    val searchResults = recipeAPI.searchByTitle(searchTitle)
-    if (searchResults.isEmpty()) logger.info("No recipes found")
-    else
-        println(searchResults)
+        val searchTitle = readNextLine("Enter the title to search by: ")
+        val searchResults = recipeAPI.searchByTitle(searchTitle)
+        if (searchResults.isEmpty()) {
+            logger.info("No recipes found")
+        } else {
+            println(searchResults)
+        }
     } else {
         logger.info("Option Invalid, no recipes found")
     }
@@ -253,13 +266,15 @@ fun searchByTitle (){
  * Searches for recipes by cooking time.
  * Prompts the user to enter the cooking time to search by and displays the matching results.
  */
-fun searchByCookingTime (){
+fun searchByCookingTime() {
     if (recipeAPI.numberOfRecipes() > 0) {
-    val searchCookingTime = readNextInt("Enter the cooking time to search by: ")
-    val searchResults = recipeAPI.searchByCookingTime(searchCookingTime)
-    if (searchResults.isEmpty()) logger.info("No recipes found")
-    else
-        println(searchResults)
+        val searchCookingTime = readNextInt("Enter the cooking time to search by: ")
+        val searchResults = recipeAPI.searchByCookingTime(searchCookingTime)
+        if (searchResults.isEmpty()) {
+            logger.info("No recipes found")
+        } else {
+            println(searchResults)
+        }
     } else {
         logger.info("Option Invalid, no recipes found")
     }
@@ -269,16 +284,18 @@ fun searchByCookingTime (){
  * Searches for recipes by difficulty level.
  * Prompts the user to enter the difficulty level to search by and displays the matching results.
  */
-fun searchByDifficultyLevel (){
+fun searchByDifficultyLevel() {
     if (recipeAPI.numberOfRecipes() > 0) {
-    val searchDifficulty = readNextLine("Enter the difficulty level to search by: ")
-    val searchResults = recipeAPI.searchByDifficultyLevel(searchDifficulty)
-    if (searchResults.isEmpty()) logger.info("No recipes found")
-    else
-        println(searchResults)
+        val searchDifficulty = readNextLine("Enter the difficulty level to search by: ")
+        val searchResults = recipeAPI.searchByDifficultyLevel(searchDifficulty)
+        if (searchResults.isEmpty()) {
+            logger.info("No recipes found")
+        } else {
+            println(searchResults)
+        }
     } else {
-    logger.info("Option Invalid, no recipes found")
-   }
+        logger.info("Option Invalid, no recipes found")
+    }
 }
 
 /**
@@ -289,9 +306,11 @@ fun searchByCalories() {
     if (recipeAPI.numberOfRecipes() > 0) {
         val maxCalories = readNextInt("Enter the max amount of calories: ")
         val searchResults = recipeAPI.searchByCalories(maxCalories)
-        if (searchResults.isEmpty()) logger.info("No recipes found with calories equal, or below $maxCalories")
-        else
+        if (searchResults.isEmpty()) {
+            logger.info("No recipes found with calories equal, or below $maxCalories")
+        } else {
             println(searchResults)
+        }
     } else {
         logger.info("Option Invalid, no recipes found")
     }
@@ -301,7 +320,7 @@ fun searchByCalories() {
  * Displays a menu for sorting recipes based on user-selected criteria.
  * The user can choose to sort recipes by calories or cooking time in ascending or descending order.
  */
-fun sortRecipes(){
+fun sortRecipes() {
     if (recipeAPI.numberOfRecipes() > 0) {
         val option = readNextInt(
             """
@@ -309,7 +328,8 @@ fun sortRecipes(){
                   > |   1) Sort by calories              |
                   > |   2) Sort by cooking time          |
                   > -------------------------------------
-         > ==>> """.trimMargin(">"))
+         > ==>> """.trimMargin(">")
+        )
 
         when (option) {
             1 -> {
@@ -319,11 +339,12 @@ fun sortRecipes(){
                   > |   1) Ascending                |
                   > |   2) Descending               |
                   > --------------------------------
-         > ==>> """.trimMargin(">"))
+         > ==>> """.trimMargin(">")
+                )
                 when (calorieOption) {
                     1 -> sortCaloriesAsc()
                     2 -> sortCaloriesDesc()
-                    else -> logger.info("Invalid option entered: $calorieOption");
+                    else -> logger.info("Invalid option entered: $calorieOption")
                 }
             }
             2 -> {
@@ -333,11 +354,12 @@ fun sortRecipes(){
                   > |   1) Ascending                |
                   > |   2) Descending               |
                   > --------------------------------
-         > ==>> """.trimMargin(">"))
+         > ==>> """.trimMargin(">")
+                )
                 when (cookingTimeOption) {
                     1 -> sortCookingTimeAsc()
                     2 -> sortCookingTimeDesc()
-                    else -> logger.info("Invalid option entered: $cookingTimeOption");
+                    else -> logger.info("Invalid option entered: $cookingTimeOption")
                 }
             }
             else -> logger.info("Invalid option entered: $option")
@@ -350,7 +372,7 @@ fun sortRecipes(){
 /**
  * Sorts recipes in ascending order based on calories and prints the result.
  */
-fun sortCaloriesAsc (){
+fun sortCaloriesAsc() {
     val ascCalories = recipeAPI.sortByCaloriesAsc()
     println("Recipes ascending by calories: \n $ascCalories")
 }
@@ -359,7 +381,7 @@ fun sortCaloriesAsc (){
  * Sorts recipes in descending order based on calories and prints the result.
  */
 
-fun sortCaloriesDesc (){
+fun sortCaloriesDesc() {
     val descCalories = recipeAPI.sortByCaloriesDesc()
     println("Recipes ascending by calories: \n $descCalories")
 }
@@ -367,7 +389,7 @@ fun sortCaloriesDesc (){
 /**
  * Sorts recipes in ascending order based on cooking time and prints the result.
  */
-fun sortCookingTimeAsc (){
+fun sortCookingTimeAsc() {
     val ascCookingTime = recipeAPI.sortByCookingTimeAsc()
     println("Recipes ascending by cooking time: \n$ascCookingTime")
 }
@@ -375,13 +397,13 @@ fun sortCookingTimeAsc (){
 /**
  * Sorts recipes in descending order based on cooking time and displays the results.
  */
-fun sortCookingTimeDesc (){
+fun sortCookingTimeDesc() {
     val descCookingTime = recipeAPI.sortByCookingTimeDesc()
     println("Recipes ascending by cooking time: \n$descCookingTime")
 }
-//------------
+// ------------
 // ITEM MENU
-//------------
+// ------------
 
 /**
  * Adds a new ingredient to the chosen recipe.
@@ -393,30 +415,31 @@ private fun addIngredientToRecipe() {
         val quantity = readNextLine("\tIngredient Quantity: ")
         val weight = readNextInt("\tIngredient weight (grams): ")
         val ingredient = Ingredients(name = name, quantity = quantity, weight = weight)
-        if (recipe.addIngredient(ingredient))
+        if (recipe.addIngredient(ingredient)) {
             println("Add Successful")
-        else
+        } else {
             logger.info("Add Not Successful")
+        }
     }
 }
 
 /**
  * Deletes the chosen ingredient from the chosen recipe.
  */
-    fun deleteIngredient() {
-        val recipe: Recipe? = askUserToChooseRecipe()
-        if (recipe != null) {
-            val ingredient: Ingredients? = askUserToChooseIngredient(recipe)
-            if (ingredient != null) {
-                val isDeleted = recipe.deleteIngredient(ingredient.ingredientId)
-                if (isDeleted) {
-                    println("Delete Successful!")
-                } else {
-                    println("Delete NOT Successful")
-                }
+fun deleteIngredient() {
+    val recipe: Recipe? = askUserToChooseRecipe()
+    if (recipe != null) {
+        val ingredient: Ingredients? = askUserToChooseIngredient(recipe)
+        if (ingredient != null) {
+            val isDeleted = recipe.deleteIngredient(ingredient.ingredientId)
+            if (isDeleted) {
+                println("Delete Successful!")
+            } else {
+                println("Delete NOT Successful")
             }
         }
     }
+}
 
 /**
  * Updates the details of the chosen ingredient in the chosen recipe.
@@ -466,17 +489,22 @@ fun markOrganic() {
             var changeStatus = 'X'
             if (ingredients.isOrganic) {
                 changeStatus =
-                    ScannerInput.readNextChar("The ingredient is currently organic, do you want to mark it as non-organic? \n" +
-                            " Enter 'Y' to mark as non-organic \n Press any key to exit: \n==>>")
-                if ((changeStatus == 'Y') ||  (changeStatus == 'y'))
+                    ScannerInput.readNextChar(
+                        "The ingredient is currently organic, do you want to mark it as non-organic? \n" +
+                            " Enter 'Y' to mark as non-organic \n Press any key to exit: \n==>>"
+                    )
+                if ((changeStatus == 'Y') || (changeStatus == 'y')) {
                     ingredients.isOrganic = false
-            }
-            else {
+                }
+            } else {
                 changeStatus =
-                    ScannerInput.readNextChar("TThe ingredient is currently non-organic, do you want to mark it as organic? \n" +
-                            " Enter 'Y' to mark as organic \n Press any key to exit: \n==>>")
-                if ((changeStatus == 'Y') ||  (changeStatus == 'y'))
+                    ScannerInput.readNextChar(
+                        "TThe ingredient is currently non-organic, do you want to mark it as organic? \n" +
+                            " Enter 'Y' to mark as organic \n Press any key to exit: \n==>>"
+                    )
+                if ((changeStatus == 'Y') || (changeStatus == 'y')) {
                     ingredients.isOrganic = true
+                }
             }
         }
     }
@@ -512,8 +540,7 @@ private fun askUserToChooseIngredient(recipe: Recipe): Ingredients? {
     if (recipe.numberOfIngredients() > 0) {
         print(recipe.listIngredients())
         return recipe.findIngredient(readNextInt("\nEnter the id of the ingredient: "))
-    }
-    else{
+    } else {
         logger.info("No ingredients for chosen recipe")
         return null
     }
@@ -550,7 +577,7 @@ fun load() {
 /**
  * Exits the application by logging a message and terminating the process.
  */
-    fun exitApp() {
-        logger.info("Exiting...")
-        exitProcess(0)
-    }
+fun exitApp() {
+    logger.info("Exiting...")
+    exitProcess(0)
+}

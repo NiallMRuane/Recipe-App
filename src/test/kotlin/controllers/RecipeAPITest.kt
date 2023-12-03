@@ -1,15 +1,14 @@
 package controllers
 
-
 import models.Recipe
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
 import persistence.JSONSerializer
 import persistence.XMLSerializer
 import persistence.YAMLSerializer
 import java.io.File
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class RecipeAPITest {
 
@@ -21,7 +20,6 @@ class RecipeAPITest {
     private var populatedRecipes: RecipeAPI? = RecipeAPI(YAMLSerializer(File("recipe.yaml")))
     private var emptyRecipes: RecipeAPI? = RecipeAPI(YAMLSerializer(File("recipe.yaml")))
 
-
     @BeforeEach
     fun setup() {
         verySmall = Recipe(0, "Cheesy Tacos", 30, "Easy", false, 250, "Niall")
@@ -30,7 +28,7 @@ class RecipeAPITest {
         veryTasty = Recipe(3, "Pizza", 20, "Medium", false, 800, "Amy")
         somethingHealthy = Recipe(4, "Salad", 10, "Easy", true, 100, "Kieran")
 
-        //adding 5 Recipes to the recipe api
+        // adding 5 Recipes to the recipe api
         populatedRecipes!!.add(verySmall!!)
         populatedRecipes!!.add(somethingFilling!!)
         populatedRecipes!!.add(feedsMany!!)
@@ -93,15 +91,15 @@ class RecipeAPITest {
     @Nested
     inner class UpdateRecipes {
         @Test
-        fun `updating a Recipe that does not exist returns false`(){
+        fun `updating a Recipe that does not exist returns false`() {
             assertFalse(populatedRecipes!!.updateRecipe(6, Recipe(0, "Updating Recipe", 10, "Easy", true, 500, "Sharon")))
-            assertFalse(populatedRecipes!!.updateRecipe(-1, Recipe(1, "Updating Recipe", 20, "Medium", false, 600, "Siobhan" )))
-            assertFalse(emptyRecipes!!.updateRecipe(0, Recipe(2, "Updating Recipe", 30, "Hard",true, 700, "Sandra" )))
+            assertFalse(populatedRecipes!!.updateRecipe(-1, Recipe(1, "Updating Recipe", 20, "Medium", false, 600, "Siobhan")))
+            assertFalse(emptyRecipes!!.updateRecipe(0, Recipe(2, "Updating Recipe", 30, "Hard", true, 700, "Sandra")))
         }
 
         @Test
         fun `updating a Recipe that exists returns true and updates`() {
-            //check recipe 5 exists and check the contents
+            // check recipe 5 exists and check the contents
             assertEquals(somethingHealthy, populatedRecipes!!.findRecipe(4))
             assertEquals("Salad", populatedRecipes!!.findRecipe(4)!!.recipeTitle)
             assertEquals(10, populatedRecipes!!.findRecipe(4)!!.cookingTime)
@@ -109,7 +107,7 @@ class RecipeAPITest {
             assertEquals(100, populatedRecipes!!.findRecipe(4)!!.calories)
             assertEquals("Kieran", populatedRecipes!!.findRecipe(4)!!.recipeCreator)
 
-            //update recipe 5 with new information and ensure contents updated successfully
+            // update recipe 5 with new information and ensure contents updated successfully
             assertTrue(populatedRecipes!!.updateRecipe(4, Recipe(4, "Updating Recipe", 40, "simple", false, 800, "Sally")))
             assertEquals("Updating Recipe", populatedRecipes!!.findRecipe(4)!!.recipeTitle)
             assertEquals(40, populatedRecipes!!.findRecipe(4)!!.cookingTime)
@@ -121,7 +119,6 @@ class RecipeAPITest {
 
     @Nested
     inner class ListRecipe {
-
 
         @Test
         fun `listRecipes returns No Recipes Stored message when ArrayList is empty`() {
@@ -139,6 +136,7 @@ class RecipeAPITest {
             assertTrue(recipesString.contains("Pizza", ignoreCase = true))
             assertTrue(recipesString.contains("Salad", ignoreCase = true))
         }
+
         @Test
         fun `listNonVeganRecipes returns no non vegan recipes stored when ArrayList is empty`() {
             assertEquals(0, emptyRecipes!!.numberOfNonVeganRecipes())
@@ -146,6 +144,7 @@ class RecipeAPITest {
                 emptyRecipes!!.listNonVeganRecipes().lowercase().contains("no non vegan recipes")
             )
         }
+
         @Test
         fun `listNonVeganRecipes returns non vegan recipes when ArrayList has non vegan recipes stored`() {
             assertEquals(3, populatedRecipes!!.numberOfNonVeganRecipes())
@@ -156,6 +155,7 @@ class RecipeAPITest {
             assertTrue(nonVeganRecipesString.contains("Pizza", ignoreCase = true))
             Assertions.assertFalse(nonVeganRecipesString.contains("Salad", ignoreCase = true))
         }
+
         @Test
         fun `listVeganRecipes returns no vegan recipes when ArrayList is empty`() {
             assertEquals(0, emptyRecipes!!.numberOfVeganRecipes())
@@ -174,20 +174,19 @@ class RecipeAPITest {
             Assertions.assertFalse(veganRecipesString.contains("Pizza", ignoreCase = true))
             assertTrue(veganRecipesString.contains("Salad", ignoreCase = true))
         }
-
     }
 
     @Nested
     inner class markRecipeVegan {
         @Test
-        fun `marking a recipe as vegan that does not exist returns false`(){
+        fun `marking a recipe as vegan that does not exist returns false`() {
             assertFalse(populatedRecipes!!.markRecipeVegan(6))
             assertFalse(populatedRecipes!!.markRecipeVegan(-1))
             assertFalse(emptyRecipes!!.markRecipeVegan(0))
         }
 
         @Test
-        fun `marking an already marked recipe returns true`(){
+        fun `marking an already marked recipe returns true`() {
             assertTrue(populatedRecipes!!.findRecipe(1)!!.isRecipeVegan)
             assertFalse(populatedRecipes!!.markRecipeVegan(1))
         }
@@ -227,12 +226,12 @@ class RecipeAPITest {
 
         @Test
         fun `search recipes by title returns no recipes when no recipes with that title exist`() {
-            //Searching a populated collection for a title that doesn't exist.
+            // Searching a populated collection for a title that doesn't exist.
             assertEquals(5, populatedRecipes!!.numberOfRecipes())
             val searchResults = populatedRecipes!!.searchByTitle("no results expected")
             assertTrue(searchResults.isEmpty())
 
-            //Searching an empty collection
+            // Searching an empty collection
             assertEquals(0, emptyRecipes!!.numberOfRecipes())
             assertTrue(emptyRecipes!!.searchByTitle("").isEmpty())
         }
@@ -241,18 +240,18 @@ class RecipeAPITest {
         fun `search recipes by title returns recipes when recipes with that title exist`() {
             assertEquals(5, populatedRecipes!!.numberOfRecipes())
 
-            //Searching a populated collection for a full title that exists (case matches exactly)
+            // Searching a populated collection for a full title that exists (case matches exactly)
             var searchResults = populatedRecipes!!.searchByTitle("Lasagna")
             assertTrue(searchResults.contains("Lasagna"))
             assertFalse(searchResults.contains("Pizza"))
 
-            //Searching a populated collection for a partial title that exists (case matches exactly)
+            // Searching a populated collection for a partial title that exists (case matches exactly)
             searchResults = populatedRecipes!!.searchByTitle("Cheesy")
             assertTrue(searchResults.contains("Cheesy Tacos"))
             assertTrue(searchResults.contains("Cheesy Pasta"))
             assertFalse(searchResults.contains("Lasagna"))
 
-            //Searching a populated collection for a partial title that exists (case doesn't match)
+            // Searching a populated collection for a partial title that exists (case doesn't match)
             searchResults = populatedRecipes!!.searchByTitle("CheESy")
             assertTrue(searchResults.contains("Cheesy Tacos"))
             assertTrue(searchResults.contains("Cheesy Pasta"))
@@ -261,12 +260,12 @@ class RecipeAPITest {
 
         @Test
         fun `search recipes by cooking time returns no recipes when no recipes with that cook time exist`() {
-            //Searching a populated collection for a cooking time that doesn't exist.
+            // Searching a populated collection for a cooking time that doesn't exist.
             assertEquals(5, populatedRecipes!!.numberOfRecipes())
             val searchResults = populatedRecipes!!.searchByCookingTime(0)
             assertTrue(searchResults.isEmpty())
 
-            //Searching an empty collection
+            // Searching an empty collection
             assertEquals(0, emptyRecipes!!.numberOfRecipes())
             assertTrue(emptyRecipes!!.searchByCookingTime(0).isEmpty())
         }
@@ -275,7 +274,7 @@ class RecipeAPITest {
         fun `search recipes by cooking time returns recipes when recipes with that cooking time exist`() {
             assertEquals(5, populatedRecipes!!.numberOfRecipes())
 
-            //Searching a populated collection for a full cooking time that exists (case matches exactly)
+            // Searching a populated collection for a full cooking time that exists (case matches exactly)
             var searchResults = populatedRecipes!!.searchByCookingTime(20)
             assertTrue(searchResults.contains("Pizza"))
             assertFalse(searchResults.contains("Cheesy Pasta"))
@@ -285,17 +284,16 @@ class RecipeAPITest {
             assertFalse(searchResults.contains("Pizza"))
             assertFalse(searchResults.contains("Cheesy Tacos"))
             assertTrue(searchResults.contains("Salad"))
-
         }
 
         @Test
         fun `search recipes by difficulty level returns no recipes when no recipes with that difficulty level exist`() {
-            //Searching a populated collection for a difficulty level that doesn't exist.
+            // Searching a populated collection for a difficulty level that doesn't exist.
             assertEquals(5, populatedRecipes!!.numberOfRecipes())
             val searchResults = populatedRecipes!!.searchByDifficultyLevel("no results expected")
             assertTrue(searchResults.isEmpty())
 
-            //Searching an empty collection
+            // Searching an empty collection
             assertEquals(0, emptyRecipes!!.numberOfRecipes())
             assertTrue(emptyRecipes!!.searchByDifficultyLevel("").isEmpty())
         }
@@ -304,21 +302,20 @@ class RecipeAPITest {
         fun `search recipes by difficulty level returns recipes when recipes with that difficulty level exist`() {
             assertEquals(5, populatedRecipes!!.numberOfRecipes())
 
-            //Searching a populated collection for a full difficulty level that exists (case matches exactly)
+            // Searching a populated collection for a full difficulty level that exists (case matches exactly)
             var searchResults = populatedRecipes!!.searchByDifficultyLevel("Easy")
             assertTrue(searchResults.contains("Cheesy Tacos"))
             assertFalse(searchResults.contains("Pizza"))
-
         }
 
         @Test
         fun `search recipes by calories returns no recipes when no recipes with that calories exist`() {
-            //Searching a populated collection for a cooking time that doesn't exist.
+            // Searching a populated collection for a cooking time that doesn't exist.
             assertEquals(5, populatedRecipes!!.numberOfRecipes())
             val searchResults = populatedRecipes!!.searchByCalories(0)
             assertTrue(searchResults.isEmpty())
 
-            //Searching an empty collection
+            // Searching an empty collection
             assertEquals(0, emptyRecipes!!.numberOfRecipes())
             assertTrue(emptyRecipes!!.searchByCookingTime(0).isEmpty())
         }
@@ -327,7 +324,7 @@ class RecipeAPITest {
         fun `search recipes by calories returns recipes when recipes with that calories exist`() {
             assertEquals(5, populatedRecipes!!.numberOfRecipes())
 
-            //Searching a populated collection for a full calories that exists (case matches exactly)
+            // Searching a populated collection for a full calories that exists (case matches exactly)
             var searchResults = populatedRecipes!!.searchByCalories(500)
             assertTrue(searchResults.contains("Cheesy Pasta"))
             assertFalse(searchResults.contains("Pizza"))
@@ -337,7 +334,6 @@ class RecipeAPITest {
             assertFalse(searchResults.contains("Pizza"))
             assertFalse(searchResults.contains("Cheesy Tacos"))
             assertTrue(searchResults.contains("Salad"))
-
         }
 /*
         @Test
@@ -360,9 +356,8 @@ class RecipeAPITest {
         }
 
  */
-
-
     }
+
     @Nested
     inner class PersistenceTests {
 
@@ -372,14 +367,14 @@ class RecipeAPITest {
             val storingRecipes = RecipeAPI(XMLSerializer(File("recipe.xml")))
             storingRecipes.store()
 
-            //Loading the empty recipe.xml file into a new object
+            // Loading the empty recipe.xml file into a new object
             val loadedRecipes = RecipeAPI(XMLSerializer(File("recipe.xml")))
             loadedRecipes.load()
 
-            //Comparing the source of the recipes (storingRecipes) with the XML loaded recipes (loadedRecipes)
+            // Comparing the source of the recipes (storingRecipes) with the XML loaded recipes (loadedRecipes)
             assertEquals(0, storingRecipes.numberOfRecipes())
             assertEquals(0, loadedRecipes.numberOfRecipes())
-            assertEquals(storingRecipes.numberOfRecipes(),loadedRecipes.numberOfRecipes())
+            assertEquals(storingRecipes.numberOfRecipes(), loadedRecipes.numberOfRecipes())
         }
 
         @Test
@@ -391,11 +386,11 @@ class RecipeAPITest {
             storingRecipes.add(somethingFilling!!)
             storingRecipes.store()
 
-            //Loading recipe.xml into a different collection
+            // Loading recipe.xml into a different collection
             val loadedRecipes = RecipeAPI(XMLSerializer(File("recipe.xml")))
             loadedRecipes.load()
 
-            //Comparing the source of the recipes (storingRecipes) with the XML loaded recipes (loadedRecipes)
+            // Comparing the source of the recipes (storingRecipes) with the XML loaded recipes (loadedRecipes)
             assertEquals(3, storingRecipes.numberOfRecipes())
             assertEquals(3, loadedRecipes.numberOfRecipes())
             assertEquals(storingRecipes.numberOfRecipes(), loadedRecipes.numberOfRecipes())
@@ -410,11 +405,11 @@ class RecipeAPITest {
             val storingRecipes = RecipeAPI(JSONSerializer(File("recipe.json")))
             storingRecipes.store()
 
-            //Loading the empty recipe.json file into a new object
+            // Loading the empty recipe.json file into a new object
             val loadingRecipes = RecipeAPI(JSONSerializer(File("recipe.json")))
             loadingRecipes.load()
 
-            //Comparing the source of the recipes (storingRecipes) with the json loaded recipes (loadedRecipes)
+            // Comparing the source of the recipes (storingRecipes) with the json loaded recipes (loadedRecipes)
             assertEquals(0, storingRecipes.numberOfRecipes())
             assertEquals(0, loadingRecipes.numberOfRecipes())
             assertEquals(storingRecipes.numberOfRecipes(), loadingRecipes.numberOfRecipes())
@@ -429,11 +424,11 @@ class RecipeAPITest {
             storingRecipes.add(somethingFilling!!)
             storingRecipes.store()
 
-            //Loading recipe.json into a different collection
+            // Loading recipe.json into a different collection
             val loadedRecipes = RecipeAPI(JSONSerializer(File("recipe.json")))
             loadedRecipes.load()
 
-            //Comparing the source of the recipes (storingRecipes) with the json loaded recipes (loadedRecipes)
+            // Comparing the source of the recipes (storingRecipes) with the json loaded recipes (loadedRecipes)
             assertEquals(3, storingRecipes.numberOfRecipes())
             assertEquals(3, loadedRecipes.numberOfRecipes())
             assertEquals(storingRecipes.numberOfRecipes(), loadedRecipes.numberOfRecipes())
@@ -448,11 +443,11 @@ class RecipeAPITest {
             val storingRecipes = RecipeAPI(YAMLSerializer(File("recipe.yaml")))
             storingRecipes.store()
 
-            //Loading the empty recipe.yaml file into a new object
+            // Loading the empty recipe.yaml file into a new object
             val loadedRecipes = RecipeAPI(YAMLSerializer(File("recipe.yaml")))
             loadedRecipes.load()
 
-            //Comparing the source of the recipes (storingRecipes) with the yaml loaded recipes (loadedRecipes)
+            // Comparing the source of the recipes (storingRecipes) with the yaml loaded recipes (loadedRecipes)
             assertEquals(0, storingRecipes.numberOfRecipes())
             assertEquals(0, loadedRecipes.numberOfRecipes())
             assertEquals(storingRecipes.numberOfRecipes(), loadedRecipes.numberOfRecipes())
@@ -467,11 +462,11 @@ class RecipeAPITest {
             storingRecipes.add(somethingFilling!!)
             storingRecipes.store()
 
-            //Loading recipe.yaml into a different collection
+            // Loading recipe.yaml into a different collection
             val loadedRecipes = RecipeAPI(YAMLSerializer(File("recipe.yaml")))
             loadedRecipes.load()
 
-            //Comparing the source of the recipes (storingRecipes) with the yaml loaded recipes (loadedRecipes)
+            // Comparing the source of the recipes (storingRecipes) with the yaml loaded recipes (loadedRecipes)
             assertEquals(3, storingRecipes.numberOfRecipes())
             assertEquals(3, loadedRecipes.numberOfRecipes())
             assertEquals(storingRecipes.numberOfRecipes(), loadedRecipes.numberOfRecipes())
@@ -479,7 +474,5 @@ class RecipeAPITest {
             assertEquals(storingRecipes.findRecipe(1), loadedRecipes.findRecipe(1))
             assertEquals(storingRecipes.findRecipe(2), loadedRecipes.findRecipe(2))
         }
-
     }
 }
-

@@ -1,5 +1,4 @@
 package controllers
-import models.Ingredients
 import models.Recipe
 import persistence.Serializer
 import utils.Utilities.formatListString
@@ -67,24 +66,35 @@ class RecipeAPI(serializerType: Serializer) {
      * @return A formatted string listing all recipes.
      */
     fun listRecipes(): String =
-        if (recipes.isEmpty()) "No recipes stored"
-        else formatListString(recipes)
+        if (recipes.isEmpty()) {
+            "No recipes stored"
+        } else {
+            formatListString(recipes)
+        }
+
     /**
      * Returns a formatted string listing non-vegan recipes.
      *
      * @return A formatted string listing non-vegan recipes.
      */
     fun listNonVeganRecipes(): String =
-        if(numberOfNonVeganRecipes() == 0) "No non vegan recipes stored"
-        else formatListString(recipes.filter { recipe -> !recipe.isRecipeVegan})
+        if (numberOfNonVeganRecipes() == 0) {
+            "No non vegan recipes stored"
+        } else {
+            formatListString(recipes.filter { recipe -> !recipe.isRecipeVegan })
+        }
+
     /**
      * Returns a formatted string listing vegan recipes.
      *
      * @return A formatted string listing vegan recipes.
      */
     fun listVeganRecipes(): String =
-        if (numberOfVeganRecipes() == 0) "No vegan recipes stored"
-        else formatListString(recipes.filter { recipe -> recipe.isRecipeVegan})
+        if (numberOfVeganRecipes() == 0) {
+            "No vegan recipes stored"
+        } else {
+            formatListString(recipes.filter { recipe -> recipe.isRecipeVegan })
+        }
 
     /**
      * Returns the total number of recipes.
@@ -93,18 +103,20 @@ class RecipeAPI(serializerType: Serializer) {
      */
 
     fun numberOfRecipes() = recipes.size
+
     /**
      * Returns the number of non-vegan recipes.
      *
      * @return The number of non-vegan recipes.
      */
-    fun numberOfNonVeganRecipes(): Int = recipes.count{recipe: Recipe -> !recipe.isRecipeVegan}
+    fun numberOfNonVeganRecipes(): Int = recipes.count { recipe: Recipe -> !recipe.isRecipeVegan }
+
     /**
      * Returns the number of vegan recipes.
      *
      * @return The number of vegan recipes.
      */
-    fun numberOfVeganRecipes(): Int = recipes.count{recipe: Recipe -> recipe.isRecipeVegan}
+    fun numberOfVeganRecipes(): Int = recipes.count { recipe: Recipe -> recipe.isRecipeVegan }
 
     /**
      * Finds a recipe by its ID.
@@ -112,7 +124,7 @@ class RecipeAPI(serializerType: Serializer) {
      * @param recipeId The ID of the recipe to be found.
      * @return The found recipe or `null` if not found.
      */
-    fun findRecipe(recipeId : Int) =  recipes.find{ recipe -> recipe.recipeId == recipeId }
+    fun findRecipe(recipeId: Int) = recipes.find { recipe -> recipe.recipeId == recipeId }
 
     /**
      * Searches for recipes by title containing the specified string.
@@ -120,24 +132,27 @@ class RecipeAPI(serializerType: Serializer) {
      * @param searchString The string to search for in recipe titles.
      * @return A formatted string listing matching recipes.
      */
-    fun searchByTitle(searchString : String) =
-        formatListString(recipes.filter { recipe -> recipe.recipeTitle.contains(searchString, ignoreCase = true)})
+    fun searchByTitle(searchString: String) =
+        formatListString(recipes.filter { recipe -> recipe.recipeTitle.contains(searchString, ignoreCase = true) })
+
     /**
      * Searches for recipes by cooking time.
      *
      * @param cookingTime The cooking time to search for.
      * @return A formatted string listing matching recipes.
      */
-    fun searchByCookingTime(cookingTime : Int) =
-        formatListString(recipes.filter { recipe -> recipe.cookingTime == cookingTime})
+    fun searchByCookingTime(cookingTime: Int) =
+        formatListString(recipes.filter { recipe -> recipe.cookingTime == cookingTime })
+
     /**
      * Searches for recipes by difficulty level containing the specified string.
      *
      * @param searchString The string to search for in difficulty levels.
      * @return A formatted string listing matching recipes.
      */
-    fun searchByDifficultyLevel(searchString : String) =
-        formatListString(recipes.filter { recipe -> recipe.difficultyLevel.contains(searchString, ignoreCase = true)})
+    fun searchByDifficultyLevel(searchString: String) =
+        formatListString(recipes.filter { recipe -> recipe.difficultyLevel.contains(searchString, ignoreCase = true) })
+
     /**
      * Searches for recipes with calories less than or equal to the specified maximum calories.
      *
@@ -145,7 +160,7 @@ class RecipeAPI(serializerType: Serializer) {
      * @return A formatted string listing matching recipes.
      */
     fun searchByCalories(maxCalories: Int) =
-        formatListString((recipes.filter { recipe -> recipe.calories <= maxCalories}))
+        formatListString((recipes.filter { recipe -> recipe.calories <= maxCalories }))
 
     /**
      * Searches for ingredients by name across all recipes.
@@ -154,8 +169,9 @@ class RecipeAPI(serializerType: Serializer) {
      * @return A formatted string listing matching recipes and their ingredients.
      */
     fun searchIngredientByName(searchString: String): String {
-        return if (numberOfRecipes() == 0) "No recipes stored"
-        else {
+        return if (numberOfRecipes() == 0) {
+            "No recipes stored"
+        } else {
             var listOfRecipes = ""
             for (recipe in recipes) {
                 for (ingredients in recipe.ingredients) {
@@ -164,8 +180,11 @@ class RecipeAPI(serializerType: Serializer) {
                     }
                 }
             }
-            if (listOfRecipes == "") "No items found for: $searchString"
-            else listOfRecipes
+            if (listOfRecipes == "") {
+                "No items found for: $searchString"
+            } else {
+                listOfRecipes
+            }
         }
     }
 
@@ -176,6 +195,7 @@ class RecipeAPI(serializerType: Serializer) {
      */
     fun sortByCaloriesAsc() =
         formatListString(recipes.sortedWith(compareBy { it.calories }))
+
     /**
      * Returns a formatted string listing recipes sorted by calories in descending order.
      *
@@ -183,6 +203,7 @@ class RecipeAPI(serializerType: Serializer) {
      */
     fun sortByCaloriesDesc() =
         formatListString(recipes.sortedWith(compareBy { recipe -> recipe.calories }).reversed())
+
     /**
      * Returns a formatted string listing recipes sorted by cooking time in ascending order.
      *
@@ -190,6 +211,7 @@ class RecipeAPI(serializerType: Serializer) {
      */
     fun sortByCookingTimeAsc() =
         formatListString(recipes.sortedWith(compareBy { it.cookingTime }))
+
     /**
      * Returns a formatted string listing recipes sorted by cooking time in descending order.
      *
@@ -254,8 +276,5 @@ class RecipeAPI(serializerType: Serializer) {
     @Throws(Exception::class)
     fun store() {
         serializer.write(recipes)
-
-
     }
-
 }
