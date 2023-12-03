@@ -109,7 +109,7 @@ class RecipeAPITest {
             assertEquals(100, populatedRecipes!!.findRecipe(4)!!.calories)
             assertEquals("Kieran", populatedRecipes!!.findRecipe(4)!!.recipeCreator)
 
-            //update note 5 with new information and ensure contents updated successfully
+            //update recipe 5 with new information and ensure contents updated successfully
             assertTrue(populatedRecipes!!.updateRecipe(4, Recipe(4, "Updating Recipe", 40, "simple", false, 800, "Sally")))
             assertEquals("Updating Recipe", populatedRecipes!!.findRecipe(4)!!.recipeTitle)
             assertEquals(40, populatedRecipes!!.findRecipe(4)!!.cookingTime)
@@ -339,10 +339,147 @@ class RecipeAPITest {
             assertTrue(searchResults.contains("Salad"))
 
         }
+/*
+        @Test
+        fun `sort recipes by calories returns recipes when recipes with that calories exist`() {
+            assertEquals(5, populatedRecipes!!.numberOfRecipes())
+
+            //Searching a populated collection for a full calories that exists (case matches exactly)
+            var searchResults = populatedRecipes!!.sortByCaloriesAsc(<=500)
+            assertTrue(searchResults.contains("Salad"))
+            assertTrue(searchResults.contains("Cheesy Tacos"))
+            assertTrue(searchResults.contains("Cheesy Pasta"))
+            assertFalse(searchResults.contains("Lasagna"))
+            assertFalse(searchResults.contains("Pizza"))
+
+            searchResults = populatedRecipes!!.sortByCaloriesAsc(<=100)
+            assertFalse(searchResults.contains("Pizza"))
+            assertFalse(searchResults.contains("Cheesy Tacos"))
+            assertTrue(searchResults.contains("Salad"))
+
+        }
+
+ */
 
 
     }
+    @Nested
+    inner class PersistenceTests {
 
+        @Test
+        fun `saving and loading an empty collection in XML doesn't crash app`() {
+            // Saving an empty recipes.XML file.
+            val storingRecipes = RecipeAPI(XMLSerializer(File("recipe.xml")))
+            storingRecipes.store()
 
+            //Loading the empty recipe.xml file into a new object
+            val loadedRecipes = RecipeAPI(XMLSerializer(File("recipe.xml")))
+            loadedRecipes.load()
+
+            //Comparing the source of the recipes (storingRecipes) with the XML loaded recipes (loadedRecipes)
+            assertEquals(0, storingRecipes.numberOfRecipes())
+            assertEquals(0, loadedRecipes.numberOfRecipes())
+            assertEquals(storingRecipes.numberOfRecipes(),loadedRecipes.numberOfRecipes())
+        }
+
+        @Test
+        fun `saving and loading an loaded collection in XML doesn't loose data`() {
+            // Storing 3 recipes to the recipe.XML file.
+            val storingRecipes = RecipeAPI(XMLSerializer(File("recipe.xml")))
+            storingRecipes.add(veryTasty!!)
+            storingRecipes.add(somethingHealthy!!)
+            storingRecipes.add(somethingFilling!!)
+            storingRecipes.store()
+
+            //Loading recipe.xml into a different collection
+            val loadedRecipes = RecipeAPI(XMLSerializer(File("recipe.xml")))
+            loadedRecipes.load()
+
+            //Comparing the source of the recipes (storingRecipes) with the XML loaded recipes (loadedRecipes)
+            assertEquals(3, storingRecipes.numberOfRecipes())
+            assertEquals(3, loadedRecipes.numberOfRecipes())
+            assertEquals(storingRecipes.numberOfRecipes(), loadedRecipes.numberOfRecipes())
+            assertEquals(storingRecipes.findRecipe(0), loadedRecipes.findRecipe(0))
+            assertEquals(storingRecipes.findRecipe(1), loadedRecipes.findRecipe(1))
+            assertEquals(storingRecipes.findRecipe(2), loadedRecipes.findRecipe(2))
+        }
+
+        @Test
+        fun `saving and loading an empty collection in JSON doesn't crash app`() {
+            // Saving an empty recipe.json file.
+            val storingRecipes = RecipeAPI(JSONSerializer(File("recipe.json")))
+            storingRecipes.store()
+
+            //Loading the empty recipe.json file into a new object
+            val loadingRecipes = RecipeAPI(JSONSerializer(File("recipe.json")))
+            loadingRecipes.load()
+
+            //Comparing the source of the recipes (storingRecipes) with the json loaded recipes (loadedRecipes)
+            assertEquals(0, storingRecipes.numberOfRecipes())
+            assertEquals(0, loadingRecipes.numberOfRecipes())
+            assertEquals(storingRecipes.numberOfRecipes(), loadingRecipes.numberOfRecipes())
+        }
+
+        @Test
+        fun `saving and loading an loaded collection in JSON doesn't loose data`() {
+            // Storing 3 recipes to the recipe.json file.
+            val storingRecipes = RecipeAPI(JSONSerializer(File("recipe.json")))
+            storingRecipes.add(veryTasty!!)
+            storingRecipes.add(somethingHealthy!!)
+            storingRecipes.add(somethingFilling!!)
+            storingRecipes.store()
+
+            //Loading recipe.json into a different collection
+            val loadedRecipes = RecipeAPI(JSONSerializer(File("recipe.json")))
+            loadedRecipes.load()
+
+            //Comparing the source of the recipes (storingRecipes) with the json loaded recipes (loadedRecipes)
+            assertEquals(3, storingRecipes.numberOfRecipes())
+            assertEquals(3, loadedRecipes.numberOfRecipes())
+            assertEquals(storingRecipes.numberOfRecipes(), loadedRecipes.numberOfRecipes())
+            assertEquals(storingRecipes.findRecipe(0), loadedRecipes.findRecipe(0))
+            assertEquals(storingRecipes.findRecipe(1), loadedRecipes.findRecipe(1))
+            assertEquals(storingRecipes.findRecipe(2), loadedRecipes.findRecipe(2))
+        }
+
+        @Test
+        fun `saving and loading an empty collection in YAML doesn't crash app`() {
+            // Saving an empty recipe.yaml file.
+            val storingRecipes = RecipeAPI(YAMLSerializer(File("recipe.yaml")))
+            storingRecipes.store()
+
+            //Loading the empty recipe.yaml file into a new object
+            val loadedRecipes = RecipeAPI(YAMLSerializer(File("recipe.yaml")))
+            loadedRecipes.load()
+
+            //Comparing the source of the recipes (storingRecipes) with the yaml loaded recipes (loadedRecipes)
+            assertEquals(0, storingRecipes.numberOfRecipes())
+            assertEquals(0, loadedRecipes.numberOfRecipes())
+            assertEquals(storingRecipes.numberOfRecipes(), loadedRecipes.numberOfRecipes())
+        }
+
+        @Test
+        fun `saving and loading an loaded collection in YAML doesn't loose data`() {
+            // Storing 3 recipes to the recipe.yaml file.
+            val storingRecipes = RecipeAPI(YAMLSerializer(File("recipe.yaml")))
+            storingRecipes.add(veryTasty!!)
+            storingRecipes.add(somethingHealthy!!)
+            storingRecipes.add(somethingFilling!!)
+            storingRecipes.store()
+
+            //Loading recipe.yaml into a different collection
+            val loadedRecipes = RecipeAPI(YAMLSerializer(File("recipe.yaml")))
+            loadedRecipes.load()
+
+            //Comparing the source of the recipes (storingRecipes) with the yaml loaded recipes (loadedRecipes)
+            assertEquals(3, storingRecipes.numberOfRecipes())
+            assertEquals(3, loadedRecipes.numberOfRecipes())
+            assertEquals(storingRecipes.numberOfRecipes(), loadedRecipes.numberOfRecipes())
+            assertEquals(storingRecipes.findRecipe(0), loadedRecipes.findRecipe(0))
+            assertEquals(storingRecipes.findRecipe(1), loadedRecipes.findRecipe(1))
+            assertEquals(storingRecipes.findRecipe(2), loadedRecipes.findRecipe(2))
+        }
+
+    }
 }
 
