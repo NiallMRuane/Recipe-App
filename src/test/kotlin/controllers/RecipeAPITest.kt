@@ -93,14 +93,14 @@ class RecipeAPITest {
     @Nested
     inner class UpdateRecipes {
         @Test
-        fun `updating a note that does not exist returns false`(){
+        fun `updating a Recipe that does not exist returns false`(){
             assertFalse(populatedRecipes!!.updateRecipe(6, Recipe(0, "Updating Recipe", 10, "Easy", true, 500, "Sharon")))
             assertFalse(populatedRecipes!!.updateRecipe(-1, Recipe(1, "Updating Recipe", 20, "Medium", false, 600, "Siobhan" )))
             assertFalse(emptyRecipes!!.updateRecipe(0, Recipe(2, "Updating Recipe", 30, "Hard",true, 700, "Sandra" )))
         }
 
         @Test
-        fun `updating a note that exists returns true and updates`() {
+        fun `updating a Recipe that exists returns true and updates`() {
             //check recipe 5 exists and check the contents
             assertEquals(somethingHealthy, populatedRecipes!!.findRecipe(4))
             assertEquals("Salad", populatedRecipes!!.findRecipe(4)!!.recipeTitle)
@@ -197,6 +197,28 @@ class RecipeAPITest {
             assertFalse(populatedRecipes!!.findRecipe(0)!!.isRecipeVegan)
             assertTrue(populatedRecipes!!.markRecipeVegan(0))
             assertTrue(populatedRecipes!!.findRecipe(0)!!.isRecipeVegan)
+        }
+    }
+
+    @Nested
+    inner class CountingMethods {
+
+        @Test
+        fun numberOfRecipesCalculatedCorrectly() {
+            assertEquals(5, populatedRecipes!!.numberOfRecipes())
+            assertEquals(0, emptyRecipes!!.numberOfRecipes())
+        }
+
+        @Test
+        fun numberOfVeganRecipesCalculatedCorrectly() {
+            assertEquals(2, populatedRecipes!!.numberOfVeganRecipes())
+            assertEquals(0, emptyRecipes!!.numberOfVeganRecipes())
+        }
+
+        @Test
+        fun numberOfNonVeganRecipesCalculatedCorrectly() {
+            assertEquals(3, populatedRecipes!!.numberOfNonVeganRecipes())
+            assertEquals(0, emptyRecipes!!.numberOfNonVeganRecipes())
         }
     }
 }
