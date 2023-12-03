@@ -176,4 +176,27 @@ class RecipeAPITest {
         }
 
     }
+
+    @Nested
+    inner class markRecipeVegan {
+        @Test
+        fun `marking a recipe as vegan that does not exist returns false`(){
+            assertFalse(populatedRecipes!!.markRecipeVegan(6))
+            assertFalse(populatedRecipes!!.markRecipeVegan(-1))
+            assertFalse(emptyRecipes!!.markRecipeVegan(0))
+        }
+
+        @Test
+        fun `marking an already marked recipe returns true`(){
+            assertTrue(populatedRecipes!!.findRecipe(1)!!.isRecipeVegan)
+            assertFalse(populatedRecipes!!.markRecipeVegan(1))
+        }
+
+        @Test
+        fun `marking a recipe as vegan that exists returns true and marks`() {
+            assertFalse(populatedRecipes!!.findRecipe(0)!!.isRecipeVegan)
+            assertTrue(populatedRecipes!!.markRecipeVegan(0))
+            assertTrue(populatedRecipes!!.findRecipe(0)!!.isRecipeVegan)
+        }
+    }
 }
