@@ -24,8 +24,8 @@ class RecipeAPITest {
 
     @BeforeEach
     fun setup() {
-        verySmall = Recipe(0, "Tacos", 30, "Easy", false, 250, "Niall")
-        somethingFilling = Recipe(1, "Pasta", 15, "Easy", true, 500, "Rob")
+        verySmall = Recipe(0, "Cheesy Tacos", 30, "Easy", false, 250, "Niall")
+        somethingFilling = Recipe(1, "Cheesy Pasta", 15, "Easy", true, 500, "Rob")
         feedsMany = Recipe(2, "Lasagna", 45, "Hard", false, 1000, "Christina")
         veryTasty = Recipe(3, "Pizza", 20, "Medium", false, 800, "Amy")
         somethingHealthy = Recipe(4, "Salad", 10, "Easy", true, 100, "Kieran")
@@ -133,8 +133,8 @@ class RecipeAPITest {
         fun `listRecipes returns Recipes when ArrayList has recipes stored`() {
             assertEquals(5, populatedRecipes!!.numberOfRecipes())
             val recipesString = populatedRecipes!!.listRecipes().lowercase()
-            assertTrue(recipesString.contains("Tacos", ignoreCase = true))
-            assertTrue(recipesString.contains("Pasta", ignoreCase = true))
+            assertTrue(recipesString.contains("Cheesy Tacos", ignoreCase = true))
+            assertTrue(recipesString.contains("Cheesy Pasta", ignoreCase = true))
             assertTrue(recipesString.contains("Lasagna", ignoreCase = true))
             assertTrue(recipesString.contains("Pizza", ignoreCase = true))
             assertTrue(recipesString.contains("Salad", ignoreCase = true))
@@ -150,8 +150,8 @@ class RecipeAPITest {
         fun `listNonVeganRecipes returns non vegan recipes when ArrayList has non vegan recipes stored`() {
             assertEquals(3, populatedRecipes!!.numberOfNonVeganRecipes())
             val nonVeganRecipesString = populatedRecipes!!.listNonVeganRecipes().lowercase()
-            assertTrue(nonVeganRecipesString.contains("Tacos", ignoreCase = true))
-            Assertions.assertFalse(nonVeganRecipesString.contains("Pasta", ignoreCase = true))
+            assertTrue(nonVeganRecipesString.contains("Cheesy Tacos", ignoreCase = true))
+            Assertions.assertFalse(nonVeganRecipesString.contains("Cheesy Pasta", ignoreCase = true))
             assertTrue(nonVeganRecipesString.contains("Lasagna", ignoreCase = true))
             assertTrue(nonVeganRecipesString.contains("Pizza", ignoreCase = true))
             Assertions.assertFalse(nonVeganRecipesString.contains("Salad", ignoreCase = true))
@@ -168,8 +168,8 @@ class RecipeAPITest {
         fun `listVeganRecipes returns no vegan recipes when ArrayList has no vegan recipes stored`() {
             assertEquals(2, populatedRecipes!!.numberOfVeganRecipes())
             val veganRecipesString = populatedRecipes!!.listVeganRecipes().lowercase()
-            Assertions.assertFalse(veganRecipesString.contains("Tacos", ignoreCase = true))
-            assertTrue(veganRecipesString.contains("Pasta", ignoreCase = true))
+            Assertions.assertFalse(veganRecipesString.contains("Cheesy Tacos", ignoreCase = true))
+            assertTrue(veganRecipesString.contains("Cheesy Pasta", ignoreCase = true))
             Assertions.assertFalse(veganRecipesString.contains("Lasagna", ignoreCase = true))
             Assertions.assertFalse(veganRecipesString.contains("Pizza", ignoreCase = true))
             assertTrue(veganRecipesString.contains("Salad", ignoreCase = true))
@@ -221,4 +221,128 @@ class RecipeAPITest {
             assertEquals(0, emptyRecipes!!.numberOfNonVeganRecipes())
         }
     }
+
+    @Nested
+    inner class SearchMethods {
+
+        @Test
+        fun `search recipes by title returns no recipes when no recipes with that title exist`() {
+            //Searching a populated collection for a title that doesn't exist.
+            assertEquals(5, populatedRecipes!!.numberOfRecipes())
+            val searchResults = populatedRecipes!!.searchByTitle("no results expected")
+            assertTrue(searchResults.isEmpty())
+
+            //Searching an empty collection
+            assertEquals(0, emptyRecipes!!.numberOfRecipes())
+            assertTrue(emptyRecipes!!.searchByTitle("").isEmpty())
+        }
+
+        @Test
+        fun `search recipes by title returns recipes when recipes with that title exist`() {
+            assertEquals(5, populatedRecipes!!.numberOfRecipes())
+
+            //Searching a populated collection for a full title that exists (case matches exactly)
+            var searchResults = populatedRecipes!!.searchByTitle("Lasagna")
+            assertTrue(searchResults.contains("Lasagna"))
+            assertFalse(searchResults.contains("Pizza"))
+
+            //Searching a populated collection for a partial title that exists (case matches exactly)
+            searchResults = populatedRecipes!!.searchByTitle("Cheesy")
+            assertTrue(searchResults.contains("Cheesy Tacos"))
+            assertTrue(searchResults.contains("Cheesy Pasta"))
+            assertFalse(searchResults.contains("Lasagna"))
+
+            //Searching a populated collection for a partial title that exists (case doesn't match)
+            searchResults = populatedRecipes!!.searchByTitle("CheESy")
+            assertTrue(searchResults.contains("Cheesy Tacos"))
+            assertTrue(searchResults.contains("Cheesy Pasta"))
+            assertFalse(searchResults.contains("Lasagna"))
+        }
+
+        @Test
+        fun `search recipes by cooking time returns no recipes when no recipes with that cook time exist`() {
+            //Searching a populated collection for a cooking time that doesn't exist.
+            assertEquals(5, populatedRecipes!!.numberOfRecipes())
+            val searchResults = populatedRecipes!!.searchByCookingTime(0)
+            assertTrue(searchResults.isEmpty())
+
+            //Searching an empty collection
+            assertEquals(0, emptyRecipes!!.numberOfRecipes())
+            assertTrue(emptyRecipes!!.searchByCookingTime(0).isEmpty())
+        }
+
+        @Test
+        fun `search recipes by cooking time returns recipes when recipes with that cooking time exist`() {
+            assertEquals(5, populatedRecipes!!.numberOfRecipes())
+
+            //Searching a populated collection for a full cooking time that exists (case matches exactly)
+            var searchResults = populatedRecipes!!.searchByCookingTime(20)
+            assertTrue(searchResults.contains("Pizza"))
+            assertFalse(searchResults.contains("Cheesy Pasta"))
+            assertFalse(searchResults.contains("Lasagna"))
+
+            searchResults = populatedRecipes!!.searchByCookingTime(10)
+            assertFalse(searchResults.contains("Pizza"))
+            assertFalse(searchResults.contains("Cheesy Tacos"))
+            assertTrue(searchResults.contains("Salad"))
+
+        }
+
+        @Test
+        fun `search recipes by difficulty level returns no recipes when no recipes with that difficulty level exist`() {
+            //Searching a populated collection for a difficulty level that doesn't exist.
+            assertEquals(5, populatedRecipes!!.numberOfRecipes())
+            val searchResults = populatedRecipes!!.searchByDifficultyLevel("no results expected")
+            assertTrue(searchResults.isEmpty())
+
+            //Searching an empty collection
+            assertEquals(0, emptyRecipes!!.numberOfRecipes())
+            assertTrue(emptyRecipes!!.searchByDifficultyLevel("").isEmpty())
+        }
+
+        @Test
+        fun `search recipes by difficulty level returns recipes when recipes with that difficulty level exist`() {
+            assertEquals(5, populatedRecipes!!.numberOfRecipes())
+
+            //Searching a populated collection for a full difficulty level that exists (case matches exactly)
+            var searchResults = populatedRecipes!!.searchByDifficultyLevel("Easy")
+            assertTrue(searchResults.contains("Cheesy Tacos"))
+            assertFalse(searchResults.contains("Pizza"))
+
+        }
+
+        @Test
+        fun `search recipes by calories returns no recipes when no recipes with that calories exist`() {
+            //Searching a populated collection for a cooking time that doesn't exist.
+            assertEquals(5, populatedRecipes!!.numberOfRecipes())
+            val searchResults = populatedRecipes!!.searchByCalories(0)
+            assertTrue(searchResults.isEmpty())
+
+            //Searching an empty collection
+            assertEquals(0, emptyRecipes!!.numberOfRecipes())
+            assertTrue(emptyRecipes!!.searchByCookingTime(0).isEmpty())
+        }
+
+        @Test
+        fun `search recipes by calories returns recipes when recipes with that calories exist`() {
+            assertEquals(5, populatedRecipes!!.numberOfRecipes())
+
+            //Searching a populated collection for a full calories that exists (case matches exactly)
+            var searchResults = populatedRecipes!!.searchByCalories(500)
+            assertTrue(searchResults.contains("Cheesy Pasta"))
+            assertFalse(searchResults.contains("Pizza"))
+            assertFalse(searchResults.contains("Lasagna"))
+
+            searchResults = populatedRecipes!!.searchByCalories(100)
+            assertFalse(searchResults.contains("Pizza"))
+            assertFalse(searchResults.contains("Cheesy Tacos"))
+            assertTrue(searchResults.contains("Salad"))
+
+        }
+
+
+    }
+
+
 }
+
