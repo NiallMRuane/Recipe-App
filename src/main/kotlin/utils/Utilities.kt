@@ -3,14 +3,20 @@ package utils
 import models.Recipe
 import models.Ingredients
 
+/**
+ * Utility class for formatting Recipe and Ingredients data.
+ */
 object Utilities {
 
-    // NOTE: JvmStatic annotation means that the methods are static i.e. we can call them over the class
-    //      name; we don't have to create an object of Utilities to use them.
-
+    /**
+     * Formats a list of Recipe objects into a readable string.
+     *
+     * @param recipesToFormat List of Recipe objects to format.
+     * @return Formatted string representing the Recipe objects.
+     */
     @JvmStatic
-    fun formatListString(notesToFormat: List<Recipe>): String =
-        notesToFormat
+    fun formatListString(recipesToFormat: List<Recipe>): String =
+        recipesToFormat
             .joinToString(separator = "\n\n") { recipe ->
                 """
         | Recipe Id: ${recipe.recipeId}
@@ -30,13 +36,19 @@ object Utilities {
     |""".trimMargin()
             }
 
+    /**
+     * Formats a set of Ingredients objects into a readable string.
+     *
+     * @param itemsToFormat Set of Ingredients objects to format.
+     * @return Formatted string representing the Ingredients objects.
+     */
     @JvmStatic
     fun formatSetString(itemsToFormat: Set<Ingredients>): String =
         itemsToFormat.joinToString(""){ ingredient ->
-                """"
+            """"
             ${ingredient.quantity} of ${ingredient.name}(${ingredient.weight})
             Organic Status: ${ingredient.isOrganic}
             """.trimMargin()
 
-            }
+        }
 }

@@ -9,8 +9,19 @@ import java.io.FileReader
 import java.io.FileWriter
 import java.lang.Exception
 
+/**
+ * XMLSerializer class for reading and writing objects to XML files.
+ *
+ * @param file The file to read from or write to.
+ */
 class XMLSerializer(private val file: File) : Serializer {
 
+    /**
+     * Reads and returns an object from the XML file.
+     *
+     * @return The read object.
+     * @throws Exception If an error occurs during reading.
+     */
     @Throws(Exception::class)
     override fun read(): Any {
         val xStream = XStream(DomDriver())
@@ -21,6 +32,12 @@ class XMLSerializer(private val file: File) : Serializer {
         return obj
     }
 
+    /**
+     * Writes the given object to the XML file.
+     *
+     * @param obj The object to be written.
+     * @throws Exception If an error occurs during writing.
+     */
     @Throws(Exception::class)
     override fun write(obj: Any?) {
         val xStream = XStream(DomDriver())
@@ -28,5 +45,4 @@ class XMLSerializer(private val file: File) : Serializer {
         outputStream.writeObject(obj)
         outputStream.close()
     }
-
 }
