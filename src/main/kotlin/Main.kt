@@ -30,7 +30,6 @@ fun runMenu() {
             10 -> updateIngredient()
             11 -> searchIngredientName()
             12 -> markOrganic()
-
             20 -> save()
             21 -> load()
             0 -> exitApp()
@@ -41,31 +40,27 @@ fun runMenu() {
 
 fun mainMenu() = readNextInt(
     """ 
-         > -----------------------------------------------------  
-         > |                  RECIPE APP                       |
-         > -----------------------------------------------------  
-         > | RECIPE MENU                                       |
-         > |   1) Add a recipe                                 |
-         > |   2) Delete a recipe                              |
-         > |   3) Update recipes                               |
-         > |   4) List recipes                                 |
-         > |   5) Search recipes                               |
-         > |   6) Mark recipe as vegan                         |
-         > |   7) Sort recipes                                 |
-         > -----------------------------------------------------  
-         > |                  ITEM MENU                        | 
-         > -----------------------------------------------------  
-         > |   8) Add ingredients                              |
-         > |   9) Delete ingredient                            |
-         > |   10) Update ingredient                           |
-         > |   11) Search ingredient by name                   |
-         > |   12) Mark ingredient as organic                  |
-         > -----------------------------------------------------
-         > |   20) Save all recipes and ingredients            |
-         > |   21) Load all recipes and ingredients            |
-         > |   0) Exit                                         |
-         > -----------------------------------------------------  
-         > ==>> """.trimMargin(">")
+      -----------------------------------------------
+    /-------------------------------------------------\
+   |                   RECIPE APP                      |
+   |---------------------------------------------------|
+   | RECIPE MENU          |            ITEM MENU       |
+   |                     |                             |
+   |   1) Add a recipe   |   8) Add ingredients        |
+   |   2) Delete a recipe|   9) Delete ingredient      |
+   |   3) Update recipes |   10) Update ingredient     |
+   |   4) List recipes   |   11) Search by name        |
+   |   5) Search recipes |   12) Mark as organic       |
+   |   6) Mark as vegan  |                             |
+   |   7) Sort recipes   |                             |
+   |                     |                             |
+   |---------------------------------------------------|
+   |   20) Save all recipes and ingredients            |
+   |   21) Load all recipes and ingredients            |
+   |   0) Exit                                         |
+    \-------------------------------------------------/
+      -----------------------------------------------
+   ==>> """
 )
 //------------
 // RECIPE MENU
