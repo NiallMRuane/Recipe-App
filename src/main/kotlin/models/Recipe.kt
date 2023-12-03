@@ -17,15 +17,15 @@ import utils.Utilities
 data class Recipe(
     var recipeId: Int = 0,
     var recipeTitle: String = "Untitled",
-    var cookingTime: Int = 60,  //minutes
+    var cookingTime: Int = 60, // minutes
     var difficultyLevel: String = "Unknown",
     var isRecipeVegan: Boolean = false,
     var calories: Int = 500,
     var recipeCreator: String = "Unknown",
     var ingredients: MutableSet<Ingredients> = mutableSetOf()
-)
-{
+) {
     private var lastIngredientId = 0
+
     /**
      * Gets the unique identifier for a new ingredient.
      *
@@ -51,7 +51,7 @@ data class Recipe(
      * @return `true` if the deletion is successful, `false` otherwise.
      */
     fun deleteIngredient(id: Int): Boolean {
-        return ingredients.removeIf { ingredients -> ingredients.ingredientId == id}
+        return ingredients.removeIf { ingredients -> ingredients.ingredientId == id }
     }
 
     /**
@@ -60,8 +60,8 @@ data class Recipe(
      * @param id The identifier of the ingredient to be found.
      * @return The found ingredient or `null` if not found.
      */
-    fun findOneIngredient(id: Int): Ingredients?{
-        return ingredients.find{ ingredients -> ingredients.ingredientId == id }
+    fun findOneIngredient(id: Int): Ingredients? {
+        return ingredients.find { ingredients -> ingredients.ingredientId == id }
     }
 
     /**
@@ -71,9 +71,9 @@ data class Recipe(
      * @param newIngredients The new ingredient data.
      * @return `true` if the update is successful, `false` otherwise.
      */
-    fun updateIngredient(id: Int, newIngredients : Ingredients): Boolean {
+    fun updateIngredient(id: Int, newIngredients: Ingredients): Boolean {
         val foundItem = findOneIngredient(id)
-        if (foundItem != null){
+        if (foundItem != null) {
             foundItem.name = newIngredients.name
             foundItem.quantity = newIngredients.quantity
             foundItem.weight = newIngredients.weight
@@ -98,8 +98,11 @@ data class Recipe(
      * @return The formatted string.
      */
     fun listIngredients() =
-        if (ingredients.isEmpty()) "\tNo ingredients added"
-        else Utilities.formatSetString(ingredients)
+        if (ingredients.isEmpty()) {
+            "\tNo ingredients added"
+        } else {
+            Utilities.formatSetString(ingredients)
+        }
 
     /**
      * Gets the number of ingredients in the recipe.

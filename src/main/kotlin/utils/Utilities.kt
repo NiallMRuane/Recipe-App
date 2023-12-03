@@ -1,7 +1,7 @@
 package utils
 
-import models.Recipe
 import models.Ingredients
+import models.Recipe
 
 /**
  * Utility class for formatting Recipe and Ingredients data.
@@ -27,13 +27,14 @@ object Utilities {
         | Vegan Status: ${recipe.isRecipeVegan}
         | Recipe Creator: ${recipe.recipeCreator}
         | Ingredients: ${
-                    recipe.ingredients.joinToString("\n") { ingredient ->
-                        """${ingredient.quantity} of ${ingredient.name}(${ingredient.weight} in grams)
+                recipe.ingredients.joinToString("\n") { ingredient ->
+                    """${ingredient.quantity} of ${ingredient.name}(${ingredient.weight} in grams)
                     | Organic Status: ${ingredient.isOrganic}
                     """.trimMargin()
-                    }
                 }
-    |""".trimMargin()
+                }
+    |
+                """.trimMargin()
             }
 
     /**
@@ -44,11 +45,10 @@ object Utilities {
      */
     @JvmStatic
     fun formatSetString(itemsToFormat: Set<Ingredients>): String =
-        itemsToFormat.joinToString(""){ ingredient ->
+        itemsToFormat.joinToString("") { ingredient ->
             """"
             ${ingredient.quantity} of ${ingredient.name}(${ingredient.weight})
             Organic Status: ${ingredient.isOrganic}
             """.trimMargin()
-
         }
 }

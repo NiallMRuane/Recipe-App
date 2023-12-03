@@ -10,11 +10,10 @@ package models
  * @property isOrganic A flag indicating whether the ingredient is organic or not. Default is false.
  */
 
-data class Ingredients (
+data class Ingredients(
     var ingredientId: Int = 0,
     var name: String,
     var quantity: String,
-    var weight: Int,  //grams
+    var weight: Int, // grams
     var isOrganic: Boolean = false
 )
-

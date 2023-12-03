@@ -1,7 +1,7 @@
 package utils
 
 import java.lang.NumberFormatException
-import java.util.*
+import java.util.Scanner
 
 /**
  * Utility class for handling user input using Scanner.

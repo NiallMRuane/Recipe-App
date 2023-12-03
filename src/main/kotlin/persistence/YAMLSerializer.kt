@@ -1,6 +1,5 @@
 package persistence
 
-
 import org.yaml.snakeyaml.Yaml
 import java.io.File
 import java.io.FileReader
@@ -11,7 +10,7 @@ import java.io.FileWriter
  *
  * @param file The file to read from or write to.
  */
-class YAMLSerializer(private val file: File): Serializer {
+class YAMLSerializer(private val file: File) : Serializer {
 
     /**
      * Reads and returns an object from the YAML file.
