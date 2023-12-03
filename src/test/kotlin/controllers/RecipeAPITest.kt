@@ -71,6 +71,55 @@ class RecipeAPITest {
     }
 
     @Nested
+    inner class DeleteRecipes {
+
+        @Test
+        fun `deleting a Recipe that does not exist, returns false`() {
+            assertFalse(emptyRecipes!!.delete(0))
+            assertFalse(populatedRecipes!!.delete(-1))
+            assertFalse(populatedRecipes!!.delete(5))
+        }
+
+        @Test
+        fun `deleting a Recipe that exists delete and returns true`() {
+            assertEquals(5, populatedRecipes!!.numberOfRecipes())
+            assertTrue(populatedRecipes!!.delete(4))
+            assertEquals(4, populatedRecipes!!.numberOfRecipes())
+            assertTrue(populatedRecipes!!.delete(0))
+            assertEquals(3, populatedRecipes!!.numberOfRecipes())
+        }
+    }
+
+    @Nested
+    inner class UpdateRecipes {
+        @Test
+        fun `updating a note that does not exist returns false`(){
+            assertFalse(populatedRecipes!!.updateRecipe(6, Recipe(0, "Updating Recipe", 10, "Easy", true, 500, "Sharon")))
+            assertFalse(populatedRecipes!!.updateRecipe(-1, Recipe(1, "Updating Recipe", 20, "Medium", false, 600, "Siobhan" )))
+            assertFalse(emptyRecipes!!.updateRecipe(0, Recipe(2, "Updating Recipe", 30, "Hard",true, 700, "Sandra" )))
+        }
+
+        @Test
+        fun `updating a note that exists returns true and updates`() {
+            //check recipe 5 exists and check the contents
+            assertEquals(somethingHealthy, populatedRecipes!!.findRecipe(4))
+            assertEquals("Salad", populatedRecipes!!.findRecipe(4)!!.recipeTitle)
+            assertEquals(10, populatedRecipes!!.findRecipe(4)!!.cookingTime)
+            assertEquals("Easy", populatedRecipes!!.findRecipe(4)!!.difficultyLevel)
+            assertEquals(100, populatedRecipes!!.findRecipe(4)!!.calories)
+            assertEquals("Kieran", populatedRecipes!!.findRecipe(4)!!.recipeCreator)
+
+            //update note 5 with new information and ensure contents updated successfully
+            assertTrue(populatedRecipes!!.updateRecipe(4, Recipe(4, "Updating Recipe", 40, "simple", false, 800, "Sally")))
+            assertEquals("Updating Recipe", populatedRecipes!!.findRecipe(4)!!.recipeTitle)
+            assertEquals(40, populatedRecipes!!.findRecipe(4)!!.cookingTime)
+            assertEquals("simple", populatedRecipes!!.findRecipe(4)!!.difficultyLevel)
+            assertEquals(800, populatedRecipes!!.findRecipe(4)!!.calories)
+            assertEquals("Sally", populatedRecipes!!.findRecipe(4)!!.recipeCreator)
+        }
+    }
+
+    @Nested
     inner class ListRecipe {
 
 
