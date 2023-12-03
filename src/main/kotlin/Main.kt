@@ -3,6 +3,7 @@ import models.Ingredients
 import models.Recipe
 import mu.KotlinLogging
 import persistence.YAMLSerializer
+import utils.ScannerInput
 import utils.ScannerInput.readNextBoolean
 import utils.ScannerInput.readNextInt
 import utils.ScannerInput.readNextLine
@@ -28,6 +29,7 @@ fun runMenu() {
             9 -> deleteIngredient()
             10 -> updateIngredient()
             11 -> searchIngredientName()
+            12 -> markOrganic()
 
             20 -> save()
             21 -> load()
@@ -55,8 +57,9 @@ fun mainMenu() = readNextInt(
          > -----------------------------------------------------  
          > |   8) Add ingredients                              |
          > |   9) Delete ingredient                            |
-         > |   10) Update ingredient                            |
+         > |   10) Update ingredient                           |
          > |   11) Search ingredient by name                   |
+         > |   12) Mark ingredient as organic                  |
          > -----------------------------------------------------
          > |   20) Save all recipes and ingredients            |
          > |   21) Load all recipes and ingredients            |
@@ -362,6 +365,30 @@ fun searchIngredientName() {
             logger.info("No ingredients found")
         } else {
             println(searchResults)
+        }
+    }
+}
+
+fun markOrganic() {
+    val recipe: Recipe? = askUserToChooseRecipe()
+    if (recipe != null) {
+        val ingredients: Ingredients? = askUserToChooseIngredient(recipe)
+        if (ingredients != null) {
+            var changeStatus = 'X'
+            if (ingredients.isOrganic) {
+                changeStatus =
+                    ScannerInput.readNextChar("The ingredient is currently organic, do you want to mark it as non-organic? \n" +
+                            " Enter 'Y' to mark as non-organic \n Press any key to exit: \n==>>")
+                if ((changeStatus == 'Y') ||  (changeStatus == 'y'))
+                    ingredients.isOrganic = false
+            }
+            else {
+                changeStatus =
+                    ScannerInput.readNextChar("TThe ingredient is currently non-organic, do you want to mark it as organic? \n" +
+                            " Enter 'Y' to mark as organic \n Press any key to exit: \n==>>")
+                if ((changeStatus == 'Y') ||  (changeStatus == 'y'))
+                    ingredients.isOrganic = true
+            }
         }
     }
 }

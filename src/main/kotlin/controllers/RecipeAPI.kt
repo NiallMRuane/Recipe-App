@@ -1,5 +1,5 @@
 package controllers
-
+import models.Ingredients
 import models.Recipe
 import persistence.Serializer
 import utils.Utilities.formatListString
@@ -99,8 +99,6 @@ class RecipeAPI(serializerType: Serializer) {
         }
         return false
     }
-
-
 
     @Throws(Exception::class)
     fun load() {
